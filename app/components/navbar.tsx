@@ -3,7 +3,10 @@ import { Button, DarkThemeToggle, Dropdown, DropdownDivider, DropdownHeader, Dro
 import { Link, useNavigate, useLocation } from "react-router";
 import Paths, { type Path } from "~/paths";
 import { HiCog, HiCurrencyDollar, HiDocumentDownload, HiLogout, HiViewGrid } from "react-icons/hi";
-import AddUserModal from "./addUserModal";
+import AddUserModal from "../user/addUserModal";
+import AddCategoryModel from "~/category/addCategoryModel";
+import AddProductModal from "~/product/addProductModal";
+import AddCompanyModal from "~/company/addCompanyModal";
 const NavBar: FC = function () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -19,7 +22,7 @@ const NavBar: FC = function () {
               {pathname.toUpperCase().replace("/", "") === "USERS" && "Usuarios"}
               {pathname.toUpperCase().replace("/", "") === "STORE" && "Tienda"}
               {pathname.toUpperCase().replace("/", "") === "COMPANIES" && "Compañias"}
-              {pathname.toUpperCase().replace("/", "") === "CATEGORIES" && "Categoria"}
+              {pathname.toUpperCase().replace("/", "") === "CATEGORIES" && "Categorias"}
               {pathname.toUpperCase().replace("/", "") === "PRODUCTS" && "Productos"}
             </span>
           </div>
@@ -34,16 +37,25 @@ const NavBar: FC = function () {
                   <TextInput
                     id="search"
                     name="search"
-                    placeholder="Buscar Usuarios"
+                    placeholder="Buscar..."
                   />
                 </div>
               </form>
             )}
             {pathname === "/users" && <AddUserModal />}
-
+            {pathname === "/categories" && <AddCategoryModel />}
+            {pathname === "/products" && <AddProductModal />}
+            {pathname === "/companies" && <AddCompanyModal />}
             <div className="flex items-center gap-x-3">
               <ToggleSwitch label={computedMode === lightMode ? "🌜" : "🌞"} checked={computedMode === lightMode ? true : false} onChange={() => toggleMode()}></ToggleSwitch>
-              <Dropdown label="Martin C" className="text-white pb-2 pt-2 rounded-md pl-4 pr-4 dark:bg-zinc-100 dark:text-black dark:focus:text-black dark:focus:bg-zinc-50 dark:hover:bg-neutral-50" color="gray" >
+             
+              <Dropdown label={ <div className="flex items-center gap-x-2 ">
+                <img
+              className="w-8 h-8 rounded-full"
+              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
+              alt="user photo"
+            /> <p className="text-sm truncate max-w-32">Martin C</p>
+              </div>} className="text-white pb-2 pt-2 rounded-md pl-4 pr-4 dark:bg-zinc-100 dark:text-black dark:focus:text-black dark:focus:bg-zinc-50 dark:hover:bg-neutral-50" color="gray" >
                 <DropdownHeader className="dark:text-black">
                   <span className="block text-sm">Usuario</span>
                   <span className="block truncate text-sm font-medium">martin@gmail.com</span>
@@ -55,7 +67,6 @@ const NavBar: FC = function () {
                 <DropdownItem className="focus:rounded-md focus:text-white focus:bg-red-600 dark:focus:bg-red-600 dark:text-black" icon={HiLogout}>Salir</DropdownItem>
               </Dropdown>
             </div>
-
           </div>
         </div>
       </div>

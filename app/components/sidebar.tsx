@@ -65,6 +65,17 @@ const Appsidebar: FC = function () {
             >
               Productos
             </SidebarItem>
+            <SidebarItem
+              onClick={() => navigate("/categories")}
+              icon={HiShoppingBag}
+              className={
+                "/categories" === currentPage
+                  ? "bg-gray-100 dark:bg-gray-700 cursor-pointer"
+                  : "cursor-pointer"
+              }
+            >
+              Categorias
+            </SidebarItem>
             <SidebarItem className="cursor-pointer" onClick={() => navigate("/auth/signin")} icon={HiLogin}>
               Iniciar sesión
             </SidebarItem>
