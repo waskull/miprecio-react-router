@@ -1,7 +1,8 @@
-import { Button, Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } from "flowbite-react";
+import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import type { ICategory } from "~/category/category";
+import PrimaryButton from "~/components/primaryButton";
 export default function AddProductModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [categories, setCategories] = useState<ICategory[]>([]);
@@ -16,12 +17,12 @@ export default function AddProductModal() {
     }, []);
     return (
         <div>
-            <Button color="blue" onClick={() => setOpen(true)}>
+            <PrimaryButton onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-3">
                     <HiPlus className="text-xl" />
                     Agregar producto
                 </div>
-            </Button>
+            </PrimaryButton>
             <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Agregar nuevo producto</strong>
@@ -63,9 +64,9 @@ export default function AddProductModal() {
                     </div>
                 </ModalBody>
                 <ModalFooter className="flex self-end content-end border-0">
-                    <Button color="blue" size="lg" onClick={() => setOpen(false)}>
+                    <PrimaryButton size="lg" onClick={() => setOpen(false)}>
                         Agregar
-                    </Button>
+                    </PrimaryButton>
                 </ModalFooter>
             </Modal>
         </div>

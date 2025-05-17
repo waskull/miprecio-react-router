@@ -1,17 +1,18 @@
 import { Button, Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter } from "flowbite-react";
 import { type FC, useState } from "react";
 import { HiOutlinePencilAlt } from "react-icons/hi";
+import { EditButton } from "~/components/primaryButton";
 
 const EditUserModal: FC = function () {
     const [isOpen, setOpen] = useState(false);
 
     return (
         <>
-            <Button className="bg-yellow-200 hover:bg-yellow-300 dark:bg-yellow-300 dark:hover:bg-yellow-400 focus:bg-yellow-400 dark:focus:bg-yellow-400 text-gray-600 dark:text-gray-600 focus:ring-yellow-300 dark:focus:ring-yellow-500" onClick={() => setOpen(true)}>
+            <EditButton size="sm" onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-2">
                     <HiOutlinePencilAlt className="text-lg" />
                 </div>
-            </Button>
+            </EditButton>
             <Modal onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Editar usuario</strong>

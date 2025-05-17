@@ -1,17 +1,18 @@
 import { Button, Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter } from "flowbite-react";
 import { useState } from "react";
 import { HiPlus } from "react-icons/hi";
+import PrimaryButton from "~/components/primaryButton";
 
 export default function AddUserModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
     return (
         <div>
-            <Button color="blue" onClick={() => setOpen(true)}>
+            <PrimaryButton onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-3">
                     <HiPlus className="text-xl" />
                     Agregar usuario
                 </div>
-            </Button>
+            </PrimaryButton>
             <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Agregar nuevo usuario</strong>
@@ -80,9 +81,12 @@ export default function AddUserModal() {
                     </div>
                 </ModalBody>
                 <ModalFooter className="flex self-end content-end border-0">
-                    <Button color="blue" size="lg" onClick={() => setOpen(false)}>
+                    <PrimaryButton size="lg" onClick={() => {
+                        console.log("cerrando modal de creacion de usuario");
+                        setOpen(false);
+                    }}>
                         Agregar
-                    </Button>
+                    </PrimaryButton>
                 </ModalFooter>
             </Modal>
         </div>

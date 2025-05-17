@@ -1,15 +1,15 @@
 import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
+import type { ICategory } from "~/category/category";
 import PrimaryButton from "~/components/primaryButton";
-import type { IUser } from "~/user/user";
-export default function AddCompanyModal() {
+export default function AddStoreProductModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [users, setUsers] = useState<IUser[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
     async function loadData(){
-        const data = await fetch("http://localhost:8000/api/v1/user/");
+        const data = await fetch("http://localhost:8000/api/v1/category/");
         const json = await data.json();
-        setUsers(json);
+        setCategories(json);
         console.table(json);
     }
     useEffect(() => {
@@ -20,17 +20,17 @@ export default function AddCompanyModal() {
             <PrimaryButton onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-3">
                     <HiPlus className="text-xl" />
-                    Agregar compañia
+                    Agregar producto
                 </div>
             </PrimaryButton>
             <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
-                    <strong>Agregar nueva compañia</strong>
+                    <strong>Agregar nuevo producto</strong>
                 </ModalHeader>
                 <ModalBody>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
                         <div>
-                            <Label htmlFor="name">Nombre de la compañia</Label>
+                            <Label htmlFor="name">Nombre</Label>
                             <div className="mt-1">
                                 <TextInput
                                     id="name"
@@ -45,7 +45,7 @@ export default function AddCompanyModal() {
                                 <TextInput
                                     id="description"
                                     name="description"
-                                    placeholder="Supermercado donde todo es super economico"
+                                    placeholder="Una bebida refrescante"
                                     type="description"
                                 />
                             </div>
@@ -53,11 +53,11 @@ export default function AddCompanyModal() {
 
                         <div>
                             <div className="mb-2 block">
-                                <Label htmlFor="users">Selecciona un usuario</Label>
+                                <Label htmlFor="category">Selecciona una categoria</Label>
                             </div>
-                            <Select id="users" required>
-                            {users.map((user: IUser) => (
-                                    <option key={user.uid} value={user.uid}>{user.fullname}</option>
+                            <Select id="category" required>
+                                {categories.map((category) => (
+                                    <option key={category.uid} value={category.uid}>{category.name}</option>
                                 ))}
                             </Select>
                         </div>

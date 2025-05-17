@@ -1,12 +1,10 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Badge, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
-import type { FC } from "react";
 import type { Route } from "../dashboard/+types/_dashboard.dashboard";
-import { lazy, Suspense } from "react";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense, memo, type FC } from "react";
 import type { IStore } from "~/store/store";
 import { HiViewGrid, HiCog, HiCurrencyDollar, HiLogout } from "react-icons/hi";
 import { Link } from "react-router";
+import NavBar from "~/components/navbar";
 
 export async function loader({ params }: Route.LoaderArgs) {
   try {
@@ -18,10 +16,48 @@ export async function loader({ params }: Route.LoaderArgs) {
   }
 }
 
-const ApexChart = lazy(async () => {
+export default function DashboardPage() {
+  const { toggleMode, computedMode } = useThemeMode();
+  const lightMode: ThemeMode = "light";
+  return (
+    <div className="">
+      <NavBar />
+      <div className="flex flex-col">
+        <div className="overflow-hidden">
+          <div className="inline-block min-w-full align-middle">
+            <div className="overflow-hidden min-h-screen max-w-screen bg-gray-50 dark:bg-gray-900 shadow pr-6 pl-6">
+              <div className="pt-6">
+                <PopularProducts />
+              </div>
+              <div className="py-6">
+                <LatestTransactions />
+              </div>
+              <LatestCustomers />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* const ApexChart = lazy(async () => {
   const module = await import("react-apexcharts");
   return { default: module.default };
-});
+}); */
+
+export function Chart(props: any) {
+  const [Chart, setChart] = useState<any>();
+  const hasType = typeof props?.type !== "undefined";
+
+  useEffect(() => {
+    import("react-apexcharts").then((mod) => {
+      setChart(() => mod.default);
+    });
+  }, []);
+
+  return hasType && Chart && <Chart {...props} />;
+}
 
 export function Dashboard({
   loaderData,
@@ -76,59 +112,10 @@ export function Dashboard({
     </div>
   )
 }
-export default function DashboardPage() {
-  const { toggleMode, computedMode } = useThemeMode();
-  const lightMode: ThemeMode = "light";
-  return (
-    <div>
-      <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
-        <div className="mb-1 w-full">
-          <div className="sm:flex">
-            <div className="mb-3 hidden items-center pt-1 dark:divide-gray-700 sm:mb-0 sm:flex sm:divide-x sm:divide-gray-100">
-            <span className="self-center text-2xl text-center font-bold dark:text-white">Inicio</span>
-        
-            
-            </div>
-            <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
-
-
-              <div className="flex items-center gap-x-3">
-                <ToggleSwitch label={computedMode === lightMode ? "🌜" : "🌞"} checked={computedMode === lightMode ? true : false} onChange={() => toggleMode()}></ToggleSwitch>
-                <Dropdown label="Martin C" className="text-white pb-2 pt-2 rounded-md pl-4 pr-4 dark:bg-zinc-100 dark:text-black dark:focus:text-black dark:focus:bg-zinc-50 dark:hover:bg-neutral-50" color="gray" >
-                  <DropdownHeader className="dark:text-black">
-                    <span className="block text-sm">Usuario</span>
-                    <span className="block truncate text-sm font-medium">bonnie@flowbite.com</span>
-                  </DropdownHeader>
-                  <DropdownItem className="focus:rounded-md dark:text-black" icon={HiViewGrid}>Dashboard</DropdownItem>
-                  <DropdownItem className="focus:rounded-md dark:text-black" icon={HiCog}>Settings</DropdownItem>
-                  <DropdownItem className="focus:rounded-md dark:text-black" icon={HiCurrencyDollar}>Earnings</DropdownItem>
-                  <DropdownDivider />
-                  <DropdownItem className="focus:rounded-md focus:text-white focus:bg-red-600 dark:focus:bg-red-600 dark:text-black" icon={HiLogout}>Sign out</DropdownItem>
-                </Dropdown>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="px-4 pt-6">
-        <PopularProducts />
-        <div className="my-6">
-          <LatestTransactions />
-        </div>
-        <LatestCustomers />
-        {/* <div className="my-6">
-                <AcquisitionOverview />
-            </div> */}
-      </div>
-    </div>
-  );
-}
 
 const PopularProducts: FC = function () {
   return (
     <div>
-
       <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
         <div className="mb-4 flex items-center justify-between">
           <div className="shrink-0">
@@ -195,7 +182,7 @@ const SalesChart: FC = function () {
   const opacityFrom = isDarkTheme ? 0 : 1;
   const opacityTo = isDarkTheme ? 0 : 1;
 
-  const options: ApexCharts.ApexOptions = {
+  const options = {
     stroke: {
       curve: "smooth",
     },
@@ -235,10 +222,11 @@ const SalesChart: FC = function () {
     },
     markers: {
       size: 5,
-      strokeColors: "#ffffff",
+      strokeColors: isDarkTheme ? "#FFFFFF" : "#FFFFFF",
+      strokeWidth: 2,
       hover: {
         size: undefined,
-        sizeOffset: 3,
+        sizeOffset: 5,
       },
     },
     xaxis: {
@@ -281,7 +269,7 @@ const SalesChart: FC = function () {
           fontSize: "14px",
           fontWeight: 500,
         },
-        formatter: function (value) {
+        formatter: function (value: any) {
           return "$" + value;
         },
       },
@@ -312,20 +300,20 @@ const SalesChart: FC = function () {
   };
   const series = [
     {
-      name: "Revenue",
+      name: "Ganancias",
       data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
-      color: "#1A56DB",
+      color: isDarkTheme ? "#31C48D" : "#057A55",
     },
   ];
 
-  return <Suspense> <ApexChart height={420} options={options} series={series} type="area" /> </Suspense>
+  return <Chart height={420} options={options} series={series} type="area" />
 
 };
 
 const Datepicker: FC = function () {
   return (
-    <span className="text-sm text-gray-600">
-      <Dropdown inline label="Last 7 days">
+    <span className="text-sm text-gray-300">
+      <Dropdown inline label="Ultimos 7 dias">
         <DropdownItem>
           <strong>Junio 16, 2025 - Junio 22, 2025</strong>
         </DropdownItem>
@@ -342,13 +330,12 @@ const Datepicker: FC = function () {
 
 const LatestCustomers: FC = function () {
   return (
-    <div className="mb-4 h-full rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6">
+    <div className="mb-4 h-full max-w-full rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-xl font-bold leading-none text-zinc-900 dark:text-white">
           Ultimos clientes
         </h3>
         <a
-          href="#"
           className="inline-flex items-center rounded-lg p-2 text-sm font-medium text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700"
         >
           Ver todos
@@ -375,94 +362,6 @@ const LatestCustomers: FC = function () {
               </div>
               <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                 $320
-              </div>
-            </div>
-          </li>
-          <li className="py-3 sm:py-4">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="/favicon.ico"
-                  alt=""
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                  Bonnie Green
-                </p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                  email@flowbite.com
-                </p>
-              </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                $3467
-              </div>
-            </div>
-          </li>
-          <li className="py-3 sm:py-4">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="/favicon.ico"
-                  alt=""
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                  Michael Gough
-                </p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                  email@flowbite.com
-                </p>
-              </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                $67
-              </div>
-            </div>
-          </li>
-          <li className="py-3 sm:py-4">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="/favicon.ico"
-                  alt=""
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                  Thomes Lean
-                </p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                  email@flowbite.com
-                </p>
-              </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                $2367
-              </div>
-            </div>
-          </li>
-          <li className="py-3 sm:py-4">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="/favicon.ico"
-                  alt=""
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                  Lana Byrd
-                </p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                  email@flowbite.com
-                </p>
-              </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                $367
               </div>
             </div>
           </li>
@@ -683,57 +582,63 @@ const AcquisitionOverview: FC = function () {
 
 const LatestTransactions: FC = function () {
   return (
-    <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
+    <div className="rounded-lg bg-gray-100 p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-            Ultimas transacciones
+            Nuevos productos
           </h3>
           <span className="text-base font-normal text-gray-600 dark:text-gray-400">
-            Lista de transacciones recientes
+            Ultimos 5 productos registrados
           </span>
         </div>
         <div className="shrink-0">
-          <a
-            href="#"
+          <Link
+            to="/products"
             className="rounded-lg p-2 text-sm font-medium text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700"
           >
-            View all
-          </a>
+            Ver todos
+          </Link>
         </div>
       </div>
       <div className="mt-8 flex flex-col">
         <div className="overflow-x-auto rounded-lg">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden shadow sm:rounded-lg">
-              <Table
-                striped
-                className="min-w-full divide-y divide-gray-200 dark:divide-gray-600"
-              >
-                <TableHead className="bg-gray-50 dark:bg-gray-700">
-                  <TableHeadCell>Transaction</TableHeadCell>
-                  <TableHeadCell>Date &amp; Time</TableHeadCell>
-                  <TableHeadCell>Amount</TableHeadCell>
-                  <TableHeadCell>Status</TableHeadCell>
-                </TableHead>
-                <TableBody className="bg-white dark:bg-gray-800">
-                  <TableRow>
-                    <TableCell className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                      Payment from{" "}
-                      <span className="font-semibold">Bonnie Green</span>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-                      Apr 23, 2021
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap p-4 text-sm font-semibold text-gray-900 dark:text-white">
-                      $2300
-                    </TableCell>
-                    <TableCell className="flex whitespace-nowrap p-4">
-                      <Badge color="success">Completed</Badge>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+
+
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        Product name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Descripción
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Category
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Apple MacBook Pro 17"
+                      </th>
+                      <td className="px-6 py-4">
+                        Silver
+                      </td>
+                      <td className="px-6 py-4">
+                        Laptop
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
             </div>
           </div>
         </div>

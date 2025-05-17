@@ -40,7 +40,7 @@ export default function LoginForm() {
           </div>
           <a
             href="#"
-            className="w-1/2 text-right text-sm text-primary-600 dark:text-primary-300"
+            className="w-1/2 text-right text-sm text-gray-900 font-bold dark:text-zinc-400 hover:underline"
           >
             Olvidaste tu contraseña?
           </a>
@@ -48,7 +48,6 @@ export default function LoginForm() {
         <div className="mb-6">
           {!loading ? (
             <Button
-              color="blue"
               type="submit"
               onClick={async (e: React.SyntheticEvent) => {
                 e.preventDefault();
@@ -56,7 +55,7 @@ export default function LoginForm() {
                 await sleep(4000);
                 navigate("/home");
               }}
-              className="w-full lg:w-full"
+              className="w-full lg:w-full bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100"
             >
               Iniciar sesión
             </Button>
@@ -72,7 +71,7 @@ export default function LoginForm() {
                 navigate("/auth/signup");
               }
             }}
-            className="cursor-pointer text-primary-600 hover:underline dark:text-primary-300"
+            className="cursor-pointer hover:underline text-gray-900 font-bold dark:text-zinc-400"
           >
             Crear cuenta
           </a>

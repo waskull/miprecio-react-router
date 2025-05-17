@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import LoadingButton from "../components/loadingButton";
+import PrimaryButton from "~/components/primaryButton";
 export default function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ export default function SignUpForm() {
           >
             <div>
               Yo acepto los&nbsp;
-              <a href="#" className="text-primary-700 dark:text-primary-200">
+              <a href="#" className="text-gray-900 font-bold dark:text-zinc-400">
                 Terminos y condiciones
               </a>
             </div>
@@ -85,12 +86,8 @@ export default function SignUpForm() {
       </div>
       <div className="mb-4">
         {!loading ? (
-          <Button
-            color="blue"
-            type="submit"
-            className="w-full lg:w-full"
-            onClick={async (e: React.SyntheticEvent) => {
-              e.preventDefault();
+          <PrimaryButton
+            onClick={async () => {
               setLoading(true);
               await sleep(3000);
               setLoading(false);
@@ -98,7 +95,7 @@ export default function SignUpForm() {
             }}
           >
             Crear Cuenta
-          </Button>
+          </PrimaryButton>
         ) : (
           <LoadingButton />
         )}
@@ -111,7 +108,7 @@ export default function SignUpForm() {
               navigate("/auth/signin");
             }
           }}
-          className="cursor-pointer text-primary-600 hover:underline dark:text-primary-300"
+          className="cursor-pointer text-gray-900 font-bold dark:text-zinc-400 hover:underline "
         >
           Iniciar sesión
         </a>

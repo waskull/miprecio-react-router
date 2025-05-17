@@ -14,5 +14,6 @@ export interface ICompanyStore{
   uid: string;
   name: string;
   description:string;
+  partner: ICreatedBy;
   store: IStore[];
 }

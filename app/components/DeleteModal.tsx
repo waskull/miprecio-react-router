@@ -7,7 +7,7 @@ export default function DeleteModal({ deleteFunc, title = "Borrar Registro", des
 
     return (
         <div>
-            <Button color="red" onClick={() => setOpen(true)}>
+            <Button size="sm" color="red" onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-2">
                     <HiTrash className="text-lg" />
 

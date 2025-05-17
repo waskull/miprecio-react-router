@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import NavBar from "~/components/navbar";
 import StoreList from "./StoreList";
 import { HiHome } from "react-icons/hi";
+import StoreDetail from "./storeDetail";
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/store/");
+        const data = await fetch("http://localhost:8000/api/v1/store/company/"+params.id+"");
         const json = await data.json();
         return json;
     } catch (e) {
@@ -18,9 +19,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 export default function StorePage({
     loaderData,
 }: Route.ComponentProps) {
-    const [data, setData] = useState<[]>(loaderData);
-    const [currentPage, setCurrentPage] = useState(1);
-    const onPageChange = (page: number) => setCurrentPage(page);
+    const [data, setData] = useState(loaderData);
     useEffect(() => {
         console.log(loaderData);
     }, []);
@@ -36,14 +35,12 @@ export default function StorePage({
                                     Inicio
                                 </BreadcrumbItem>
                                 <BreadcrumbItem href="/store">Tienda</BreadcrumbItem>
+                                <BreadcrumbItem>{data?.name || "Tienda no encontrada"}</BreadcrumbItem>
                             </Breadcrumb>
-                            <StoreList data={data} />
+                            <StoreDetail data={data} />
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-col overflow-x-auto justify-center fixed bottom-0 w-full items-center border-t border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between pb-3.5">
-                <Pagination currentPage={currentPage} totalPages={data.length | 0} onPageChange={onPageChange} showIcons />
             </div>
         </div>
     );

@@ -9,14 +9,7 @@ export default function UserList({ data }: { data: IUser[] }): JSX.Element {
     return (
         <Table className="min-w-full divide-y mt-0 divide-gray-200 dark:divide-gray-600">
             <TableHead className="bg-gray-100 dark:bg-gray-700">
-                {/* <TableHeadCell>
-                    <Label htmlFor="select-all" className="sr-only">
-                        Select all
-                    </Label>
-                    <Checkbox id="select-all" name="select-all" />
-                </TableHeadCell> */}
                 <TableHeadCell>Usuario</TableHeadCell>
-                {/* <TableHeadCell>Correo</TableHeadCell> */}
                 <TableHeadCell>Rol</TableHeadCell>
                 <TableHeadCell>Telefono</TableHeadCell>
                 <TableHeadCell>Estado</TableHeadCell>

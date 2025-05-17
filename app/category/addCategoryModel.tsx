@@ -1,18 +1,19 @@
-import { Button, Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter } from "flowbite-react";
+import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter } from "flowbite-react";
 import { type FC, useState } from "react";
 import { HiPlus } from "react-icons/hi";
+import PrimaryButton from "~/components/primaryButton";
 
 const AddCategoryModel: FC = function () {
     const [isOpen, setOpen] = useState(false);
 
     return (
         <>
-            <Button color="blue" onClick={() => setOpen(true)}>
+            <PrimaryButton onClick={() => setOpen(true)}>
                 <div className="flex items-center gap-x-3">
                     <HiPlus className="text-xl" />
                     Agregar categoria
                 </div>
-            </Button>
+            </PrimaryButton>
             <Modal onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Crear Categoria</strong>
@@ -43,9 +44,9 @@ const AddCategoryModel: FC = function () {
                     </div>
                 </ModalBody>
                 <ModalFooter className="flex justify-end">
-                    <Button color="blue" size="lg" onClick={() => setOpen(false)}>
+                    <PrimaryButton size="lg" onClick={() => setOpen(false)}>
                         Crear categoria
-                    </Button>
+                    </PrimaryButton>
                 </ModalFooter>
             </Modal>
         </>

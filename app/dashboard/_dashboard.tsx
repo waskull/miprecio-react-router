@@ -14,7 +14,8 @@ const DashboardLayout: FC<PropsWithChildren<NavbarSidebarLayoutProps>> =
     function ({ children, isFooter = false }) {
         return (
             <div className="">
-                 <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-150 opacity-75">
+                
+                 <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-100 opacity-75">
 
                             </div>
                 {/* <Navbar /> */}
@@ -23,8 +24,7 @@ const DashboardLayout: FC<PropsWithChildren<NavbarSidebarLayoutProps>> =
                     <MainContent isFooter={isFooter}>
                         {/* min-h-screen abajo */}
                         <div className="relative">
-                            <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-150 opacity-75">
-
+                            <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-100 opacity-75">
                             </div>
                          <Outlet />
                         </div>

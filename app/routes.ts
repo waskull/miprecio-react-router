@@ -12,6 +12,7 @@ export default [
         route("categories", "./category/_dashboard.category.tsx"),
         route("products", "./product/_dashboard.product.tsx"),
         route("store", "./store/_dashboard.store.tsx"),
+        route("store/:id", "./store/_dashboard.store.$id.tsx"),
         route("users", "./user/_dashboard.user.tsx"),
       ]),
       route("*", "./404.tsx"),
