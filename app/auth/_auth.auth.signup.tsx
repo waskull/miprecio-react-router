@@ -1,61 +1,44 @@
-/* import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router"; */
-import SignUpForm from "~/auth/signForm";
+import {
+  Button,
+  Checkbox,
+  Label,
+  Popover,
+  TextInput,
+} from "flowbite-react";
+import { data, redirect, useNavigate } from "react-router";
+import { useState } from "react";
+import LoadingButton from "../components/loadingButton";
+import PrimaryButton from "~/components/primaryButton";
+import type { Route } from "./+types/_auth.auth.signup";
+import { commitSession, getSession } from "~/sessions.server";
+import SignUpForm from "./signForm";
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  );
+  if (session.has("access_token")) {
+    return redirect("/home", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+  console.log("no tiene uid");
+  return data(
+    { error: session.get("error") },
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    }
+  );
+}
 
-export default function Signup() {
-    return (
-        <div>
-            {/* <h1 className="mb-3 text-2xl font-bold dark:text-white md:text-3xl">
-                Crear una cuenta
-            </h1> */}
-            <SignUpForm></SignUpForm>
-            {/* <form>
-                <div className="mb-4 flex flex-col gap-y-3">
-                    <Label htmlFor="email">Tú correo</Label>
-                    <TextInput
-                        id="email"
-                        name="email"
-                        placeholder="name@company.com"
-                        type="email"
-                    />
-                </div>
-                <div className="mb-6 flex flex-col gap-y-3">
-                    <Label htmlFor="password">Tú contraseña</Label>
-                    <TextInput
-                        id="password"
-                        name="password"
-                        placeholder="••••••••"
-                        type="password"
-                    />
-                </div>
-                <div className="mb-6 flex flex-col gap-y-3">
-                    <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
-                    <TextInput
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        placeholder="••••••••"
-                        type="password"
-                    />
-                </div>
-                <div className="mb-6 flex items-center gap-x-3">
-                    <Checkbox id="acceptTerms" name="acceptTerms" />
-                    <Label htmlFor="acceptTerms">
-                        Acepto los &nbsp;
-                        <a href="#" className="text-primary-700 dark:text-primary-200">
-                            terminos y condiciones
-                        </a>
-                    </Label>
-                </div>
-                <div className="mb-7">
-                    <Button type="submit" className="w-full lg:w-auto">
-                        Crear cuenta
-                    </Button>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                    Ya tienes una cuenta?&nbsp;
-                    <Link className="text-primary-600 dark:text-primary-200" to="/auth/signin">Inicia sesión aca</Link>
-                </p>
-            </form> */}
-        </div>
-    );
+export default function SignUpPage({ actionData }: Route.ComponentProps) {
+  return (
+    <SignUpForm actionData={actionData} />
+  );
+}
+async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

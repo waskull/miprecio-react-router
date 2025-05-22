@@ -5,18 +5,20 @@ import { HiPlus } from "react-icons/hi";
 export default function PrimaryButton({
     children,
     size = "md",
+    type = "button",
     onClick,
     ...otherProps }: {
         children: React.ReactNode,
         size?: string, 
+        type?: "button" | "submit" | "reset",
         onClick: () => Promise<any | void> | void,
-        otherProps?: any
+        otherProps?: any,
     }) {
     return (
         <Button className="bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100"
             color="gray"
             size={size}
-            type="button"
+            type={type}
             onClick={(e: React.SyntheticEvent) => {
                 e.preventDefault();
                 onClick();
@@ -26,6 +28,28 @@ export default function PrimaryButton({
         </Button>
     );
 }
+
+export function ModalButton({
+    children,
+    size = "md",
+    type = "button",
+    ...otherProps }: {
+        children: React.ReactNode,
+        size?: string, 
+        type?: "button" | "submit" | "reset",
+        otherProps?: any,
+    }) {
+    return (
+        <Button className="bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100"
+            color="gray"
+            size={size}
+            type={type}
+            {...otherProps}>
+            {children}
+        </Button>
+    );
+}
+
 
 export function EditButton({
     children,

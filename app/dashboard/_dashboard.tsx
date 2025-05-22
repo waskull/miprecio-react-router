@@ -1,23 +1,29 @@
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 import { useEffect, type FC, type PropsWithChildren } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import { MdFacebook } from "react-icons/md";
 import { FaDribbble, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Footer, FooterLink, FooterLinkGroup, useThemeMode, type ThemeMode } from "flowbite-react";
+import { getSession } from "~/sessions.server";
+import type { Route } from "./+types/_dashboard";
 
 interface NavbarSidebarLayoutProps {
     isFooter?: boolean;
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+    const session = await getSession(request.headers.get('Cookie'));
+    if(!session.has('access_token')) return redirect('/auth/signin');
+    return {};
 }
 
 const DashboardLayout: FC<PropsWithChildren<NavbarSidebarLayoutProps>> =
     function ({ children, isFooter = false }) {
         return (
             <div className="">
-                
-                 <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-100 opacity-75">
-
-                            </div>
+                <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-100 opacity-75">
+                </div>
                 {/* <Navbar /> */}
                 <div className="flex items-start">
                     <Sidebar />
@@ -26,7 +32,7 @@ const DashboardLayout: FC<PropsWithChildren<NavbarSidebarLayoutProps>> =
                         <div className="relative">
                             <div aria-hidden="true" className="absolute inset-y-16 inset-x-0 w-16 rounded-full rotate-45 bg-gradient-to-b from-blue-500 to-teal-600  blur-3xl mx-auto scale-y-100 opacity-75">
                             </div>
-                         <Outlet />
+                            <Outlet />
                         </div>
                     </MainContent>
                 </div>
@@ -38,14 +44,14 @@ const MainContent: FC<PropsWithChildren<NavbarSidebarLayoutProps>> = function ({
     children,
     isFooter,
 }) {
-    const {setMode, computedMode} = useThemeMode();
-    let theme:string | null = null;    
+    const { setMode, computedMode } = useThemeMode();
+    let theme: string | null = null;
     const lightMode: ThemeMode = "light";
     const darkMode: ThemeMode = "dark";
-    useEffect(() => {        
-    theme = localStorage.getItem('flowbite-theme-mode');
-    if (theme  === lightMode || theme === darkMode) setMode(theme);
-    else setMode(darkMode);
+    useEffect(() => {
+        theme = localStorage.getItem('flowbite-theme-mode');
+        if (theme === lightMode || theme === darkMode) setMode(theme);
+        else setMode(darkMode);
     }, [])
     return (
         <main className="relative size-full overflow-y-auto md:ml-64  mt-0">
@@ -121,11 +127,5 @@ const MainContentFooter: FC = function () {
         </>
     );
 };
-
-export function ASD() {
-    return (
-        <Outlet ></Outlet>
-    );
-}
 
 export default DashboardLayout;

@@ -2,7 +2,7 @@ import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Badge 
 import type { JSX } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import type { IUser } from "~/user/user";
-import { Role } from "~/util/role-enum";
+import { RoleObject } from "~/util/role-enum";
 import EditUserModal from "./editUserModal";
 
 export default function UserList({ data }: { data: IUser[] }): JSX.Element {
@@ -43,7 +43,7 @@ export default function UserList({ data }: { data: IUser[] }): JSX.Element {
                             </div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
-                            {u.role === Role.admin ? "Administrador" : u.role === Role.partner ? "Socio" : "Usuario"}
+                            {u.role === RoleObject.admin ? "Administrador" : u.role === RoleObject.partner ? "Socio" : "Usuario"}
                         </TableCell>
                         <TableCell className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
                             {u?.phone}

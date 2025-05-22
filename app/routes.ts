@@ -14,6 +14,7 @@ export default [
         route("store", "./store/_dashboard.store.tsx"),
         route("store/:id", "./store/_dashboard.store.$id.tsx"),
         route("users", "./user/_dashboard.user.tsx"),
+        route("users/:id", "./user/addUserAction.tsx"),
       ]),
       route("*", "./404.tsx"),
     ] satisfies RouteConfig;

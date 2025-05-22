@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import LoadingButton from "../components/loadingButton";
 import PrimaryButton from "~/components/primaryButton";
-export default function SignUpForm() {
+export default function SignUpForm({ actionData }: any) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   return (

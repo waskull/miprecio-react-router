@@ -1,8 +1,36 @@
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, redirect, useNavigate } from "react-router";
 import { Button, Card, DarkThemeToggle, useThemeMode } from "flowbite-react";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
-export default function AuthLayout() {
+import type { Route } from "./+types/_auth";
+import { useState } from "react";
+/* 
+import type { Route } from "./+types/_auth";
+import { commitSession, getSession } from "~/sessions.server";
+export async function loader({
+    request
+}: Route.LoaderArgs) {
+    const session = await getSession(
+        request.headers.get("Cookie")
+    );
+    const result = await fetch("http://localhost:8000/api/v1/auth/me", { method: "GET", headers: { authorization: `Bearer ${session.get("access_token")}` } });
+    const response = await result.json();
+    console.log(response);
+    return{};
+} */
+
+export async function loader({}: Route.LoaderArgs) {
+    try {
+        return {};
+    } catch (e) {
+        return [];
+    }
+}
+
+export default function AuthLayout({
+    loaderData,
+}: Route.ComponentProps) {
     const navigate = useNavigate();
+    const [data, setData] = useState(loaderData);
     const { toggleMode, computedMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
 

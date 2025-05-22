@@ -1,58 +1,66 @@
-/* import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router"; */
-import type { FC } from "react";
 import LoginForm from "~/auth/loginForm";
+import type { Route } from "./+types/_auth.auth.login";
+import { signIn } from "./authService";
+import type { TsignInSchema } from "./authSchemas";
+import { data, redirect } from "react-router";
+import { commitSession, getSession } from "~/sessions.server";
 
-const SignInPage: FC = function () {
+export async function action({
+  request,
+}: Route.ActionArgs) {
+  try {
+    const session = await getSession(
+      request.headers.get("Cookie")
+    );
+    let formData = await request.formData();
+    const data = Object.fromEntries(formData) as TsignInSchema;
+    const result = await signIn(data);
+    if (!result) { throw new Error("Error en la solicitud"); }
+
+    if (result?.user) {
+      session.set("email", result?.user?.email);
+      session.set("fullname", result?.user?.fullname);
+      session.set("role", result?.user?.role);
+      session.set("access_token", result?.access_token);
+      session.set("refresh_token", result?.refresh_token);
+      return redirect("/home", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    if (e instanceof Error) return e;
+    return { error: "Algo salio mal", status: 500 };
+  }
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  );
+  if (session.has("access_token")) {
+    return redirect("/home", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+  console.log("no tiene uid");
+  return data(
+    { error: session.get("error") },
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    }
+  );
+}
+
+export default function SignInPage({ actionData }: Route.ComponentProps) {
   return (
-    <div >
-      <LoginForm />
-       {/*  
-        <h1 className="mb-3 text-2xl font-bold dark:text-white md:text-3xl">
-          Inicio de sesión
-        </h1>
-        <form>
-          <div className="mb-4 flex flex-col gap-y-3">
-            <Label htmlFor="email">Correo</Label>
-            <TextInput
-              id="email"
-              name="email"
-              placeholder="name@company.com"
-              type="email"
-            />
-          </div>
-          <div className="mb-6 flex flex-col gap-y-3">
-            <Label htmlFor="password">Contraseña</Label>
-            <TextInput
-              id="password"
-              name="password"
-              placeholder="••••••••"
-              type="password"
-            />
-          </div>
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-x-3">
-              <Checkbox id="rememberMe" name="rememberMe" />
-              <Label htmlFor="rememberMe">Recuerdame</Label>
-            </div>
-            <a
-              className="w-1/2 text-right text-sm text-primary-600 dark:text-primary-300"
-            >
-              Olvidaste tu contraseña?
-            </a>
-          </div>
-          <div className="mb-6">
-            <Button type="submit" className="w-full">
-              Iniciar sesión
-            </Button>
-          </div>
-          <p className="text-sm text-gray-500 dark:text-gray-300">
-            No estas registrado?&nbsp;
-            <Link className="text-primary-600 dark:text-primary-200" to="/auth/signup">Crear cuenta aca</Link>
-          </p>
-        </form> */}
-    </div>
+    <LoginForm actionData={actionData} />
   );
 };
 
-export default SignInPage;

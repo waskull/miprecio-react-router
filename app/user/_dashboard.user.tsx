@@ -5,13 +5,13 @@ import type { IUser } from "~/user/user";
 import NavBar from "~/components/navbar";
 import UserList from "./userList";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
     try {
         const data = await fetch("http://localhost:8000/api/v1/user/");
         const json = await data.json();
         return json;
     } catch (e) {
-        return [];
+        return { error: e };
     }
 }
 
@@ -20,7 +20,7 @@ export default function UserPage({
 }: Route.ComponentProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page: number) => setCurrentPage(page);
-    const [data, setData] = useState<IUser[]>(loaderData);
+    const [data, setData] = useState<IUser[] | any>(loaderData);
     useEffect(() => {
         console.log(loaderData);
     }, []);
