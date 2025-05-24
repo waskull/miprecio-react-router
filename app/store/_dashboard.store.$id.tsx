@@ -25,7 +25,6 @@ export default function StorePage({
     }, []);
     return (
         <div>
-            <NavBar />
             <div className="flex flex-col">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle">

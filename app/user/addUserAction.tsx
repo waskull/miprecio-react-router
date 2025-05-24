@@ -1,4 +1,3 @@
-import type { T } from "node_modules/tailwindcss/dist/types-B254mqw1.mjs";
 import { getSession } from "~/sessions.server";
 import type { TaddUserSchema } from "./userSchema";
 import { addUser } from "./userService";

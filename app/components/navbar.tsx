@@ -1,12 +1,22 @@
-import { type FC } from "react";
 import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
-import { useNavigate, useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import { HiCog, HiCurrencyDollar, HiLogout, HiViewGrid } from "react-icons/hi";
 import AddUserModal from "../user/addUserModal";
 import AddCategoryModel from "~/category/addCategoryModel";
 import AddProductModal from "~/product/addProductModal";
 import AddCompanyModal from "~/company/addCompanyModal";
-const NavBar: FC = function () {
+import type { IUserSession } from "~/interfaces/user";
+import { RoleObject } from "~/util/role-enum";
+import { Suspense, useEffect, useState } from "react";
+export default function NavBar() {
+  const [userData, setUserData] = useState<IUserSession | null>(null);
+  useEffect(() => {
+    const getData = async () => {
+      let data = await fetch("/users/getuserinfo/");
+      setUserData(await data.json());
+    }
+    getData();
+  }, []);
   const { pathname } = useLocation();
   const { toggleMode, computedMode } = useThemeMode();
   const lightMode: ThemeMode = "light";
@@ -47,24 +57,11 @@ const NavBar: FC = function () {
             {pathname === "/companies" && <AddCompanyModal />}
             <div className="flex items-center gap-x-3">
               <ToggleSwitch label={computedMode === lightMode ? "🌜" : "🌞"} checked={computedMode === lightMode ? true : false} onChange={() => toggleMode()}></ToggleSwitch>
-             
-              <Dropdown label={ <div className="flex items-center gap-x-2 ">
-                <img
-              className="w-8 h-8 rounded-full"
-              src="/favicon.ico"
-              alt="user photo"
-            /> <p className="text-sm truncate max-w-32">Martin C</p>
-              </div>} className="pb-2 pt-2 rounded-md pl-4 pr-4 dark:bg-transparent  dark:focus:text-black dark:focus:bg-gray-50 dark:hover:outline-gray-100 dark:text-gray-100 ring-2 dark:hover:bg-gray-100 bg-gray-50 text-gray-900 dark:hover:text-black dark:focus:ring-gray-400 dark:hover:ring-gray-400  hover:bg-gray-100  focus:bg-gray-100 focus:ring-gray-700 focus:outline-none focus:ring-2 ring-gray-700" >
-                <DropdownHeader className="dark:text-black">
-                  <span className="block text-sm">Usuario</span>
-                  <span className="block truncate text-sm font-medium">martin@gmail.com</span>
-                </DropdownHeader>
-                <DropdownItem className="focus:rounded-md dark:text-black focus:bg-gray-300 text-gray-900" icon={HiViewGrid}>Inicio</DropdownItem>
-                <DropdownItem className="focus:rounded-md dark:text-black focus:bg-gray-300 text-gray-900" icon={HiCog}>Mi Perfil</DropdownItem>
-                <DropdownItem className="focus:rounded-md dark:text-black focus:bg-gray-300 text-gray-900" icon={HiCurrencyDollar}>Cambiar contraseña</DropdownItem>
-                <DropdownDivider />
-                <DropdownItem className="focus:rounded-md focus:text-white focus:bg-red-600 dark:focus:bg-red-600 dark:text-black" icon={HiLogout}>Salir</DropdownItem>
-              </Dropdown>
+
+
+              <Suspense fallback={<div>Cargando...</div>}>
+                <UserDropdown userData={userData} />
+              </Suspense>
             </div>
           </div>
         </div>
@@ -73,4 +70,40 @@ const NavBar: FC = function () {
   );
 };
 
-export default NavBar;
+function UserDropdown({ userData }: { userData: IUserSession | null }) {
+  return (
+    <div>
+      <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-400 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+        <span className="sr-only">Abrir menu de usuario</span>
+        <img className="w-8 h-8 me-2 rounded-full" src="/favicon.ico" alt="user photo" />
+        {userData?.fullname ?? ""}
+        <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+        </svg>
+      </button>
+
+
+      <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
+        <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+          <div className="font-medium ">{RoleObject.admin === userData?.role ? "Administrador" : RoleObject.partner === userData?.role ? "Socio" : "Usuario"}</div>
+          <div className="truncate">{userData?.email || ""}</div>
+        </div>
+
+        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
+          <li>
+            <Link to="/home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Inicio</Link>
+          </li>
+          <li>
+            <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Perfil</Link>
+          </li>
+          <li>
+            <Link to="/changepassword" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</Link>
+          </li>
+        </ul>
+        <div className="py-2">
+          <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Salir</Link>
+        </div>
+      </div>
+    </div>
+  );
+}

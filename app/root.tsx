@@ -36,12 +36,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ThemeModeScript />
       </head>
       <body>
-      <ThemeProvider theme={flowbiteTheme}/>
+        <ThemeProvider theme={flowbiteTheme} />
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         {children}
-       
+
         <ScrollRestoration />
         <Scripts />
-        <ThemeProvider/>
+        <ThemeProvider />
       </body>
     </html>
   );

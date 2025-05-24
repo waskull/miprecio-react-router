@@ -1,27 +1,22 @@
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Badge, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
 import type { Route } from "../dashboard/+types/_dashboard.dashboard";
 import { useEffect, useState, lazy, Suspense, memo, type FC } from "react";
 import type { IStore } from "~/store/store";
-import { HiViewGrid, HiCog, HiCurrencyDollar, HiLogout } from "react-icons/hi";
-import { Link } from "react-router";
-import NavBar from "~/components/navbar";
+import { Link, useLoaderData } from "react-router";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({params}: Route.LoaderArgs) {
   try {
     const data = await fetch("http://localhost:8000/api/v1/store/stores");
-    const json = await data.json();
-    return json;
+    return { data: await data.json() || [] };
   } catch (e) {
     return [];
   }
 }
 
-export default function DashboardPage() {
-  const { toggleMode, computedMode } = useThemeMode();
-  const lightMode: ThemeMode = "light";
+export default function DashboardPage({ loaderData }: Route.ComponentProps) {
+  const data = useLoaderData() as { data: IStore[] };
   return (
     <div className="">
-      <NavBar />
       <div className="flex flex-col">
         <div className="overflow-hidden">
           <div className="inline-block min-w-full align-middle">
@@ -59,19 +54,15 @@ export function Chart(props: any) {
   return hasType && Chart && <Chart {...props} />;
 }
 
-export function Dashboard({
-  loaderData,
-}: Route.ComponentProps) {
-  const [data, setData] = useState<IStore[]>(loaderData);
+export function Dash({ data }: { data: IStore[] }) {
   useEffect(() => {
-    console.log(loaderData);
   }, []);
   return (
     <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 m-2">
       <h1 className="text-black dark:text-white text-3xl mb-4 text-center flex">Ultimos productos registrados</h1>
       <div className="overflow-x-auto">
         <h3 className="text-black dark:text-white text-2xl"> </h3>
-        {data.length > 0 ? (
+        {data?.length > 0 ? (
           <Table className="backdrop-blur-lg">
             <TableHead>
               <TableRow>
@@ -85,7 +76,7 @@ export function Dashboard({
               </TableRow>
             </TableHead>
             <TableBody className="divide-y">
-              {data.map((e: any) => (
+              {data?.map((e: any) => (
                 <TableRow key={e.uid} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {e?.product?.name}

@@ -26,7 +26,6 @@ export default function StorePage({
     }, []);
     return (
         <div>
-            <NavBar />
             <div className="flex flex-col">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle">
@@ -43,7 +42,7 @@ export default function StorePage({
                 </div>
             </div>
             <div className="flex flex-col overflow-x-auto justify-center fixed bottom-0 w-full items-center border-t border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between pb-3.5">
-                <Pagination currentPage={currentPage} totalPages={data.length | 0} onPageChange={onPageChange} showIcons />
+                <Pagination nextLabel="Siguiente" previousLabel="Anterior" currentPage={currentPage} totalPages={data.length | 0} onPageChange={onPageChange} showIcons />
             </div>
         </div>
     );

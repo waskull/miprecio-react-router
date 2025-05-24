@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Form, useNavigate } from "react-router";
+import { Form, useFetcher, useNavigate } from "react-router";
 import { useState } from "react";
 import LoadingButton from "../components/loadingButton";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,9 +21,9 @@ async function sleep(ms: number): Promise<void> {
 
 export default function LoginForm({ actionData }: any) {
   const [loading, setLoading] = useState(false);
+  const fetcher = useFetcher();
   const [errs, setErrs] = useState<signInError | string[] | null>(null);
   const navigate = useNavigate();
-
   /* const onSubmit = async (data: TsignInSchema) => {
     const valid = await trigger();
     console.log(valid ? data : 'Invalid');
@@ -48,7 +48,7 @@ export default function LoginForm({ actionData }: any) {
 
   return (
     <div>
-      <Form method="post">
+      <fetcher.Form method="post">
         <h1 className="mb-3 text-2xl font-bold dark:text-white md:text-3xl">
           Inicio de sesión
         </h1>
@@ -123,7 +123,7 @@ export default function LoginForm({ actionData }: any) {
             Crear cuenta
           </a>
         </p>
-      </Form>
+      </fetcher.Form>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { FaDribbble, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Footer, FooterLink, FooterLinkGroup, useThemeMode, type ThemeMode } from "flowbite-react";
 import { getSession } from "~/sessions.server";
 import type { Route } from "./+types/_dashboard";
+import NavBar from "../components/navbar";
 
 interface NavbarSidebarLayoutProps {
     isFooter?: boolean;
@@ -55,6 +56,7 @@ const MainContent: FC<PropsWithChildren<NavbarSidebarLayoutProps>> = function ({
     }, [])
     return (
         <main className="relative size-full overflow-y-auto md:ml-64  mt-0">
+            <NavBar></NavBar>
             {children}
             {isFooter && (
                 <div className="mx-4 mt-4">

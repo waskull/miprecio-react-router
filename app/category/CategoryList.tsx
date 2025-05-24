@@ -3,58 +3,52 @@ import type { JSX } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import type { ICategory } from "./category";
 
-export default function ProductList({ data }: { data: ICategory[] }): JSX.Element {
+export default function CategoryList({ data }: { data: ICategory[] }): JSX.Element {
     return (
-        <Table className="min-w-full divide-y mt-0 divide-gray-200 dark:divide-gray-600">
-            <TableHead className="bg-gray-100 dark:bg-gray-700">
-                {/* <TableHeadCell>
-                    <Label htmlFor="select-all" className="sr-only">
-                        Select all
-                    </Label>
-                    <Checkbox id="select-all" name="select-all" />
-                </TableHeadCell> */}
-                <TableHeadCell>Nombre</TableHeadCell>
-                {/* <TableHeadCell>Correo</TableHeadCell> */}
-                <TableHeadCell>Descripción</TableHeadCell>
-                <TableHeadCell></TableHeadCell>
-            </TableHead>
-            <TableBody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+        <div className="relative shadow-md sm:rounded-lg">
+            <table className="w-full min-w-full divide-y mt-0 dark:divide-gray-600 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" className="px-6 py-3">
+                            Nombre
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Descripción
+                        </th>
+                        <th scope="col" className="px-6 py-3">
 
-                {data.map((u: ICategory) => (
-                    <TableRow key={u.uid} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                        {/* <TableCell className="w-4 p-4">
-                            <div className="flex items-center">
-                                <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
-                                <label htmlFor="checkbox-1" className="sr-only">
-                                    checkbox
-                                </label>
-                            </div>
-                        </TableCell> */}
-                        <TableCell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-                            <img
-                                className="h-10 w-10 rounded-full"
-                                src="/favicon.ico"
-                                alt="Neil Sims avatar"
-                            />
-                            <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                <div className="text-base font-semibold text-gray-900 dark:text-white">
-                                    {u.name}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((u: ICategory) => (
+                        <tr key={u.uid} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                            <th scope="row" className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0 px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                <img
+                                    className="h-10 w-10 rounded-full"
+                                    src="/favicon.ico"
+                                    alt="Neil Sims avatar"
+                                />
+                                <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    <div className="text-base truncate font-semibold text-gray-900 dark:text-white">
+                                        {u.name}
+                                    </div>
                                 </div>
-                            </div>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
-                            {u.description}
-                        </TableCell>
-                        <TableCell>
-                            <div className="flex justify-end gap-x-2 whitespace-nowrap">
-                                {/* <EditCategoryModal /> */}
-                                <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => console.log("Borrando producto")} />
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                ))}
+                            </th>
+                            <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
+                                {u.description}
+                            </td>
+                            <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
+                                <div className="flex justify-end gap-x-2">
+                                    <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => console.log("Borrando producto")} />
+                                </div>
+                            </td>
 
-            </TableBody>
-        </Table>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+
     );
 };

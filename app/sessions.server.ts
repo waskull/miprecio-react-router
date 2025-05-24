@@ -1,9 +1,8 @@
 import { createCookieSessionStorage } from "react-router";
+import type { IUserSession } from "./interfaces/user";
 
 type SessionData = {
-    email: string;
-    fullname: string;
-    role: string;
+    user: IUserSession;
     access_token: string;
     refresh_token: string
 };

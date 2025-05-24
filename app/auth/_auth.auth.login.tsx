@@ -18,9 +18,7 @@ export async function action({
     if (!result) { throw new Error("Error en la solicitud"); }
 
     if (result?.user) {
-      session.set("email", result?.user?.email);
-      session.set("fullname", result?.user?.fullname);
-      session.set("role", result?.user?.role);
+      session.set("user", result?.user);
       session.set("access_token", result?.access_token);
       session.set("refresh_token", result?.refresh_token);
       return redirect("/home", {

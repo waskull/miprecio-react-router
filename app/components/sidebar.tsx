@@ -24,13 +24,13 @@ const Appsidebar: FC = function () {
 
   return (
     <Sidebar className="fixed collapse md:visible border-b text-gray-950 border-r-1 border-gray-200 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar with multi-level dropdown example">
-      <div className="px-3 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+      <div className="px-3 border-b border-gray-200 dark:border-gray-700 overflow-y-auto bg-gray-50 dark:bg-gray-800">
         <Link to="/home" className="flex items-center ps-0 mb-2">
           <img src="/favicon.ico" className="h-6 me-2 sm:h-7" alt="Flowbite Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MiPrecio</span>
         </Link>
       </div>
-      <div className="flex  flex-col justify-between py-2 ">
+      <div className="flex  flex-col justify-between py-2">
         <SidebarItems>
 
           <SidebarItemGroup>

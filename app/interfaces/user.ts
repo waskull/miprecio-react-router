@@ -12,3 +12,9 @@ export interface IUser extends ICreatedBy{
   address?: string;
   is_verified: boolean;
 }
+
+export interface IUserSession {
+  email?: string;
+  fullname?: string;
+  role?: string;
+}
