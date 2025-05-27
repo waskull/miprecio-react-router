@@ -76,12 +76,12 @@ const Appsidebar: FC = function () {
             >
               Categorias
             </SidebarItem>
-            <SidebarItem className="cursor-pointer" onClick={() => navigate("/auth/signin")} icon={HiLogin}>
+            {/* <SidebarItem className="cursor-pointer" onClick={() => navigate("/auth/signin")} icon={HiLogin}>
               Iniciar sesión
             </SidebarItem>
             <SidebarItem className="cursor-pointer" onClick={() => navigate("/auth/signup")} icon={HiPencil}>
               Crear Cuenta
-            </SidebarItem>
+            </SidebarItem> */}
           </SidebarItemGroup>
           <SidebarItemGroup>
             <SidebarItem

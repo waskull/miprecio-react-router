@@ -32,10 +32,12 @@ export default function PrimaryButton({
 export function ModalButton({
     children,
     size = "md",
+    disabled = false,
     type = "button",
     ...otherProps }: {
         children: React.ReactNode,
         size?: string, 
+        disabled?: boolean,
         type?: "button" | "submit" | "reset",
         otherProps?: any,
     }) {
@@ -44,6 +46,7 @@ export function ModalButton({
             color="gray"
             size={size}
             type={type}
+            disabled={disabled}
             {...otherProps}>
             {children}
         </Button>

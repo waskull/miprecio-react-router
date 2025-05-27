@@ -3,6 +3,25 @@ import type { Route } from "../user/+types/_dashboard.user";
 import { useEffect, useState } from "react";
 import type { IUser } from "~/user/user";
 import UserList from "./userList";
+import { getSession } from "~/sessions.server";
+import type { TaddUserSchema } from "./userSchema";
+import { addUser } from "./userService";
+
+export async function action({ request }: Route.ActionArgs) {
+    const session = await getSession(request.headers.get("Cookie"));
+    const formData = await request.formData();
+    console.log(formData);
+    try {
+        const data = Object.fromEntries(formData) as TaddUserSchema;
+        const result = await addUser(data, session.get("access_token") ?? "");
+        console.log(result);
+        if (!result?.message) return { error: "Algo salio mal al agregar el usuario", errors: result }
+        return "El usuario ha sido creado con exito";
+    } catch (e) {
+        console.log("error: ", e)
+        throw new Error("Algo salio mal");
+    }
+}
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {
@@ -24,7 +43,7 @@ export default function UserPage({
         console.log(loaderData);
     }, []);
     return (
-        <div>            
+        <div>
             <div className="flex flex-col">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle bg-gray-50 dark:bg-gray-700">

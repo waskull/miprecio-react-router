@@ -8,15 +8,23 @@ import AddCompanyModal from "~/company/addCompanyModal";
 import type { IUserSession } from "~/interfaces/user";
 import { RoleObject } from "~/util/role-enum";
 import { Suspense, useEffect, useState } from "react";
-export default function NavBar() {
-  const [userData, setUserData] = useState<IUserSession | null>(null);
+export default function NavBar({userData = null}: {userData: IUserSession | null}) {
+  /* const [userData, setUserData] = useState<IUserSession | null>(null);
   useEffect(() => {
     const getData = async () => {
-      let data = await fetch("/users/getuserinfo/");
-      setUserData(await data.json());
+      try {
+        let data = await fetch("/users/getuserinfo/");
+        const json = await data.json();
+        console.log("data: ", json);
+        setUserData(json.message ? null : json);
+      }
+      catch (e) {
+        console.log("ERROR:", e);
+        setUserData(null);
+      }
     }
     getData();
-  }, []);
+  }, []); */
   const { pathname } = useLocation();
   const { toggleMode, computedMode } = useThemeMode();
   const lightMode: ThemeMode = "light";
@@ -73,7 +81,7 @@ export default function NavBar() {
 function UserDropdown({ userData }: { userData: IUserSession | null }) {
   return (
     <div>
-      <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-400 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+      <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
         <span className="sr-only">Abrir menu de usuario</span>
         <img className="w-8 h-8 me-2 rounded-full" src="/favicon.ico" alt="user photo" />
         {userData?.fullname ?? ""}
@@ -101,7 +109,7 @@ function UserDropdown({ userData }: { userData: IUserSession | null }) {
           </li>
         </ul>
         <div className="py-2">
-          <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Salir</Link>
+          <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-500 dark:text-gray-200">Salir</Link>
         </div>
       </div>
     </div>

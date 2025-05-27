@@ -18,15 +18,13 @@ export default function AddUserModal() {
     useEffect(() => {
         setLoading(fetcher.state !== "idle");
         setData(fetcher.data);
-        console.log("Objeto: ", fetcher?.data)
     }, [fetcher]);
     const {
         register,
         trigger,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, isValid, isDirty },
         reset,
-        setError,
     } = useForm<TaddUserSchema>({
         resolver: zodResolver(addUserSchema),
         mode: "all",
@@ -48,14 +46,14 @@ export default function AddUserModal() {
                     Agregar usuario
                 </div>
             </PrimaryButton>
-            <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
+            <Modal className="backdrop-blur-xs" onClose={() => setOpen(!isOpen)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Agregar nuevo usuario</strong>
                 </ModalHeader>
 
                 <ModalBody>
-                        <fetcher.Form method="post" action="/users/33">
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 ">
+                    <fetcher.Form method="post" action="/users">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 ">
                             <div>
                                 <Label htmlFor="fullname">Nombre Completo</Label>
                                 <div className="mt-1">
@@ -102,7 +100,7 @@ export default function AddUserModal() {
                                 <div className="mt-1">
                                     <TextInput
                                         {...register("confirmPassword")}
-                                        type="confirmPassword"
+                                        type="password"
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         placeholder="abcdef" />
@@ -170,24 +168,51 @@ export default function AddUserModal() {
                                     <p className="text-red-500 dark:text-red-600">{`${errors?.birthdate?.message}`}</p>
                                 )}
                             </div>
+                            <div>
+                                <Label htmlFor="role">Rol</Label>
+                                <div className="mt-1">
+                                    <Select 
+                                    {...register("role")}
+                                        id="role"
+                                        name="role">
+                                        <option value={RoleObject.user}>Usuario</option>
+                                        <option value={RoleObject.partner}>Socio</option>
+                                    </Select>
+                                </div>
+                                {errors?.role?.message && (
+                                    <p className="text-red-500 dark:text-red-600">{`${errors?.role?.message}`}</p>
+                                )}
+                            </div>
 
-                    </div>
-                        </fetcher.Form>
+                        </div>
 
-                    <div className="pt-2 pb-2">
-                        {Array.isArray(data?.errors) ? (
-                            data.errors.map((error: string) => (
-                                <p key={error} className="text-red-500 dark:text-red-600">{`${error}`}</p>
-                            ))
-                        ) : (
-                            <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.error || ""}`}</p>
-                        )}
-                    </div>
 
+                        <div className="pt-2 pb-2">
+                            {Array.isArray(data?.errors) ? (
+                                data?.errors.map((error: string) => (
+                                    <p key={error} className="text-red-500 dark:text-red-600">{`${error || ""}`}</p>
+                                ))
+                            ) : (
+                                <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.error || ""}`}</p>
+                            )}
+                        </div>
+
+                        {/* <div className="pt-2 pb-2">
+                            {fetcher?.data?.error ? (
+                                <p className="text-red-500 dark:text-red-600">{`${fetcher?.data?.error || ""}`}</p>
+                            ) : (
+                                fetcher?.data?.errors.map((error: string) => (
+                                    <p key={error} className="text-red-500 dark:text-red-600">{`${error || ""}`}</p>
+                                ))
+                            )
+                            }
+                        </div> */}
+
+                        <ModalFooter className="flex justify-end ">
+                            {loading ? <LoadingButton /> : <ModalButton disabled={!isDirty || !isValid} type="submit">Agregar usuario</ModalButton>}
+                        </ModalFooter>
+                    </fetcher.Form>
                 </ModalBody>
-                <ModalFooter className="flex justify-end ">
-                    {loading ? <LoadingButton /> : <ModalButton type="submit">Agregar usuario</ModalButton>}
-                </ModalFooter>
             </Modal>
         </div >
     );

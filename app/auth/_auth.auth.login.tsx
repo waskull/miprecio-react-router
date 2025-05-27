@@ -4,6 +4,7 @@ import { signIn } from "./authService";
 import type { TsignInSchema } from "./authSchemas";
 import { data, redirect } from "react-router";
 import { commitSession, getSession } from "~/sessions.server";
+import type { IUserSession } from "~/interfaces/user";
 
 export async function action({
   request,
@@ -38,13 +39,11 @@ export async function loader({ request }: Route.LoaderArgs) {
   const session = await getSession(
     request.headers.get("Cookie")
   );
-  if (session.has("access_token")) {
-    return redirect("/home", {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
+  const user = session.get('user') as IUserSession;
+  if (session.get("access_token") && user?.email) {
+    return redirect("/home");
   }
+  await commitSession(session),
   console.log("no tiene uid");
   return data(
     { error: session.get("error") },

@@ -1,13 +1,14 @@
-import { Outlet, redirect } from "react-router";
+import { Outlet, redirect, useLoaderData } from "react-router";
 import { useEffect, type FC, type PropsWithChildren } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
 import { MdFacebook } from "react-icons/md";
 import { FaDribbble, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Footer, FooterLink, FooterLinkGroup, useThemeMode, type ThemeMode } from "flowbite-react";
-import { getSession } from "~/sessions.server";
+import { commitSession, getSession } from "~/sessions.server";
 import type { Route } from "./+types/_dashboard";
 import NavBar from "../components/navbar";
+import type { IUserSession } from "~/interfaces/user";
 
 interface NavbarSidebarLayoutProps {
     isFooter?: boolean;
@@ -15,7 +16,35 @@ interface NavbarSidebarLayoutProps {
 
 export async function loader({ request }: Route.LoaderArgs) {
     const session = await getSession(request.headers.get('Cookie'));
-    if(!session.has('access_token')) return redirect('/auth/signin');
+    if (!session.has('access_token')) {
+        return redirect('/auth/signin')
+    };
+    try {
+        const res = await fetch("http://localhost:8000/api/v1/auth/refresh_token", { method: "GET", headers: { authorization: `Bearer ${session.get("refresh_token")}` } });
+        const result = await res.json();
+        if (result?.error_code === "invalid_token") {
+            return redirect("/auth/signin", {
+                headers: {
+                    "Set-Cookie": await commitSession(session),
+                },
+            });
+        }
+        const data = await fetch("http://localhost:8000/api/v1/auth/me", { method: "GET", headers: { authorization: `Bearer ${session.get("access_token")}` } });
+        const response = await data.json();
+        const user = {
+            role: response?.role,
+            fullname: response?.fullname,
+            email: response?.email
+        }
+        session.set("user", user);
+        session.set("access_token", session.get(result?.access_token));
+        session.set("refresh_token", session.get("refresh_token") || "");
+        request.headers.set("Cookie", await commitSession(session));
+        return session.get("user");
+
+    } catch (e) {
+        console.log("ERROR: ", e);
+    }
     return {};
 }
 
@@ -49,6 +78,7 @@ const MainContent: FC<PropsWithChildren<NavbarSidebarLayoutProps>> = function ({
     let theme: string | null = null;
     const lightMode: ThemeMode = "light";
     const darkMode: ThemeMode = "dark";
+    const loaderData = useLoaderData() as IUserSession;
     useEffect(() => {
         theme = localStorage.getItem('flowbite-theme-mode');
         if (theme === lightMode || theme === darkMode) setMode(theme);
@@ -56,7 +86,7 @@ const MainContent: FC<PropsWithChildren<NavbarSidebarLayoutProps>> = function ({
     }, [])
     return (
         <main className="relative size-full overflow-y-auto md:ml-64  mt-0">
-            <NavBar></NavBar>
+            <NavBar userData={loaderData}></NavBar>
             {children}
             {isFooter && (
                 <div className="mx-4 mt-4">
