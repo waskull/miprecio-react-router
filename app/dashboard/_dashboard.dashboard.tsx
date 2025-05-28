@@ -1,20 +1,26 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
 import type { Route } from "../dashboard/+types/_dashboard.dashboard";
-import { useEffect, useState, lazy, Suspense, memo, type FC } from "react";
+import { useEffect, useState, lazy, Suspense, memo, type FC, type JSX } from "react";
 import type { IStore } from "~/store/store";
-import { Link, useLoaderData } from "react-router";
+import { data, Link, useLoaderData } from "react-router";
+import type { IProduct } from "~/product/product";
+import type { IUser } from "~/user/user";
+import { RoleObject } from "~/util/role-enum";
+import { en } from "zod/v4/locales";
 
-export async function loader({params}: Route.LoaderArgs) {
+export async function loader({ params }: Route.LoaderArgs) {
   try {
     const data = await fetch("http://localhost:8000/api/v1/store/stores");
-    return { data: await data.json() || [] };
+    const products = await fetch("http://localhost:8000/api/v1/product/top");
+    const users = await fetch("http://localhost:8000/api/v1/user/top");
+    return { data: await data.json() || [], products: await products.json() || [], users: await users.json() || [] };
   } catch (e) {
     return [];
   }
 }
 
 export default function DashboardPage({ loaderData }: Route.ComponentProps) {
-  const data = useLoaderData() as { data: IStore[] };
+  const data = useLoaderData() as { data: IStore[], products: IProduct[], users: IUser[] };
   return (
     <div className="">
       <div className="flex flex-col">
@@ -22,12 +28,12 @@ export default function DashboardPage({ loaderData }: Route.ComponentProps) {
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden min-h-screen max-w-screen bg-gray-50 dark:bg-gray-900 shadow pr-6 pl-6">
               <div className="pt-6">
-                <PopularProducts />
+                <PopularProducts products={data?.products} />
               </div>
               <div className="py-6">
                 <LatestTransactions />
               </div>
-              <LatestCustomers />
+              <LatestCustomers users={data?.users} />
             </div>
           </div>
         </div>
@@ -104,17 +110,17 @@ export function Dash({ data }: { data: IStore[] }) {
   )
 }
 
-const PopularProducts: FC = function () {
+export function PopularProducts({ products }: { products: IProduct[] }): JSX.Element {
   return (
     <div>
       <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
         <div className="mb-4 flex items-center justify-between">
           <div className="shrink-0">
             <span className="text-2xl font-bold leading-none text-gray-900 dark:text-white sm:text-3xl">
-              2341 <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">productos consultados</span>
+              Productos mas populares<span className="text-2xl font-bold text-gray-700 dark:text-gray-300">.</span>
             </span>
             <h3 className="text-base font-normal text-gray-600 dark:text-gray-400">
-              Productos mas consultados
+              {products?.length || 0} productos consultados
             </h3>
           </div>
           <div className="flex flex-1 items-center justify-end text-base font-bold text-green-600 dark:text-green-400">
@@ -133,7 +139,7 @@ const PopularProducts: FC = function () {
             </svg>
           </div>
         </div>
-        <SalesChart />
+        <SalesChart products={products} />
         <div className="mt-5 flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-6">
           <Datepicker />
           <div className="shrink-0">
@@ -164,7 +170,7 @@ const PopularProducts: FC = function () {
   );
 };
 
-const SalesChart: FC = function () {
+export function SalesChart({ products }: { products: IProduct[] }) {
   const { mode } = useThemeMode();
   const isDarkTheme = mode === "dark";
 
@@ -197,9 +203,21 @@ const SalesChart: FC = function () {
       enabled: false,
     },
     tooltip: {
+      fillSeriesColor: false,
+      theme: "mixed",
       style: {
         fontSize: "14px",
         fontFamily: "Inter, sans-serif",
+        color: isDarkTheme ? "#FFFFFF" : "#000000",
+      },
+      marker: {
+        show: true
+      },
+      y: {
+        formatter: undefined,
+        title: {
+          formatter: (seriesName: any) => seriesName,
+        },
       },
     },
     grid: {
@@ -221,19 +239,11 @@ const SalesChart: FC = function () {
       },
     },
     xaxis: {
-      categories: [
-        "01 Feb",
-        "02 Feb",
-        "03 Feb",
-        "04 Feb",
-        "05 Feb",
-        "06 Feb",
-        "07 Feb",
-      ],
+      categories: products.map((product) => product.name),
       labels: {
         style: {
           colors: [labelColor],
-          fontSize: "14px",
+          fontSize: "12px",
           fontWeight: 500,
         },
       },
@@ -247,7 +257,7 @@ const SalesChart: FC = function () {
         show: true,
         position: "back",
         stroke: {
-          color: borderColor,
+          color: isDarkTheme ? "#FFFFFF" : "#000000",
           width: 1,
           dashArray: 10,
         },
@@ -255,13 +265,17 @@ const SalesChart: FC = function () {
     },
     yaxis: {
       labels: {
+        background: {
+          enabled: false,
+          foreColor: '#fff',
+        },
         style: {
           colors: [labelColor],
           fontSize: "14px",
           fontWeight: 500,
         },
         formatter: function (value: any) {
-          return "$" + value;
+          return value + " consultas";
         },
       },
     },
@@ -291,8 +305,8 @@ const SalesChart: FC = function () {
   };
   const series = [
     {
-      name: "Ganancias",
-      data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
+      name: "Cantidad",
+      data: products.map((product, index) => index + 1),
       color: isDarkTheme ? "#31C48D" : "#057A55",
     },
   ];
@@ -319,43 +333,46 @@ const Datepicker: FC = function () {
   );
 };
 
-const LatestCustomers: FC = function () {
+export function LatestCustomers({ users }: { users: IUser[] }): JSX.Element {
   return (
     <div className="mb-4 h-full max-w-full rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-xl font-bold leading-none text-zinc-900 dark:text-white">
           Ultimos clientes
         </h3>
-        <a
+        <Link
+          to={"/users"}
           className="inline-flex items-center rounded-lg p-2 text-sm font-medium text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700"
         >
           Ver todos
-        </a>
+        </Link>
       </div>
       <div className="flow-root">
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          <li className="py-3 sm:py-4">
-            <div className="flex items-center space-x-4">
-              <div className="shrink-0">
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src="/favicon.ico"
-                  alt=""
-                />
+          {users.map((user: IUser) => (
+            <li key={user.uid} className="py-3 sm:py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="/favicon.ico"
+                    alt=""
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                    {user.fullname}
+                  </p>
+                  <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                    {user.email}
+                  </p>
+                </div>
+                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  {user.role === RoleObject.admin ? "Administrador" : user.role === RoleObject.partner ? "Socio" : "Usuario"}
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                  Neil Sims
-                </p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                  email@flowbite.com
-                </p>
-              </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                $320
-              </div>
-            </div>
-          </li>
+            </li>
+          ))}
         </ul>
       </div>
       <div className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-6">
@@ -365,7 +382,7 @@ const LatestCustomers: FC = function () {
             href="#"
             className="inline-flex items-center rounded-lg p-2 text-xs font-medium uppercase text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700 sm:text-sm"
           >
-            Reporte de productos
+            Reporte de usuarios
             <svg
               className="ml-1 h-4 w-4 sm:h-5 sm:w-5"
               fill="none"
