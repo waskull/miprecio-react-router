@@ -1,7 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, Pagination } from "flowbite-react";
 import type { Route } from "../store/+types/_dashboard.store";
 import { useEffect, useState } from "react";
-import NavBar from "~/components/navbar";
 import StoreList from "./StoreList";
 import { HiHome } from "react-icons/hi";
 
@@ -12,6 +11,14 @@ export async function loader({ params }: Route.LoaderArgs) {
         return json;
     } catch (e) {
         return [];
+    }
+}
+
+export async function action({ params }: Route.ActionArgs) {
+    try {
+        console.log(params);
+    } catch (e) {
+        console.log(e);
     }
 }
 
@@ -41,7 +48,7 @@ export default function StorePage({
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col overflow-x-auto justify-center fixed bottom-0 w-full items-center border-t border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between pb-3.5">
+            <div className="flex flex-col overflow-x-auto justify-center fixed bottom-0 w-full items-center border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 sm:flex sm:justify-between pb-3.5">
                 <Pagination nextLabel="Siguiente" previousLabel="Anterior" currentPage={currentPage} totalPages={data.length | 0} onPageChange={onPageChange} showIcons />
             </div>
         </div>

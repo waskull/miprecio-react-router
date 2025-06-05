@@ -40,9 +40,8 @@ export const addUserSchema = z
 
 export type TaddUserSchema = z.infer<typeof addUserSchema>;
 
-export const editUserSchema = z
+export const editUserPasswordSchema = z
     .object({
-        email: z.string({ message: "El correo debe de ser una cadena de caracteres" }).trim().email("Debes proveer un correo valido"),
         password: z
             .string({ message: "La contraseña debe de ser una cadena de caracteres" })
             .min(4, "La contraseña debe de tener minimo 4 caracteres")
@@ -51,6 +50,18 @@ export const editUserSchema = z
             .string({ message: "La contraseña de confirmación debe de ser una cadena de caracteres" })
             .min(4, "La contraseña de confirmación debe de tener minimo 4 caracteres")
             .max(50, "La contraseña de confirmación debe de tener maximo 50 caracteres"),
+    }
+    )
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Las contraseñas no son iguales",
+        path: ["confirmPassword"],
+    });
+
+export type TeditUserPasswordSchema = z.infer<typeof editUserPasswordSchema>;
+
+export const editUserSchema = z
+    .object({
+        email: z.string({ message: "El correo debe de ser una cadena de caracteres" }).trim().email("Debes proveer un correo valido"),
         fullname: z
             .string({ message: "El nombre debe de ser una cadena de caracteres" })
             .min(3, "El nombre debe de tener minimo 3 caracteres")
@@ -72,9 +83,5 @@ export const editUserSchema = z
             .optional(),
         birthdate: z.string().date().optional(),
     })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Las contraseñas no son iguales",
-        path: ["confirmPassword"],
-    });
 
 export type TeditUserSchema = z.infer<typeof editUserSchema>;

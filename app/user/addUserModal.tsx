@@ -4,15 +4,14 @@ import { HiPlus } from "react-icons/hi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { addUserSchema, type TaddUserSchema } from "./userSchema";
-import { addUser } from "./userService";
 import PrimaryButton, { ModalButton } from "~/components/primaryButton";
 import { RoleObject } from "~/util/role-enum";
 import type { GenericError } from "~/interfaces/error";
 import LoadingButton from "~/components/loadingButton";
-import { Form, useFetcher } from "react-router";
+import { useFetcher } from "react-router";
 export default function AddUserModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     let fetcher = useFetcher();
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {

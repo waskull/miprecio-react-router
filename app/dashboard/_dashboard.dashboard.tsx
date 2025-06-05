@@ -626,7 +626,7 @@ const LatestTransactions: FC = function () {
                         Descripción
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        Category
+                        Categoria
                       </th>
                     </tr>
                   </thead>
@@ -658,7 +658,7 @@ const LatestTransactions: FC = function () {
             href="#"
             className="inline-flex items-center rounded-lg p-2 text-xs font-medium uppercase text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700 sm:text-sm"
           >
-            Transactions Report
+            Reporte de ventas
             <svg
               className="ml-1 h-4 w-4 sm:h-5 sm:w-5"
               fill="none"

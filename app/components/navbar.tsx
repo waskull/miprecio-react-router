@@ -1,4 +1,4 @@
-import { Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
+import { Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, Popover, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
 import { Link, useLocation } from "react-router";
 import { HiCog, HiCurrencyDollar, HiLogout, HiViewGrid } from "react-icons/hi";
 import AddUserModal from "../user/addUserModal";
@@ -8,7 +8,8 @@ import AddCompanyModal from "~/company/addCompanyModal";
 import type { IUserSession } from "~/interfaces/user";
 import { RoleObject } from "~/util/role-enum";
 import { Suspense, useEffect, useState } from "react";
-export default function NavBar({userData = null}: {userData: IUserSession | null}) {
+import PrimaryButton from "./primaryButton";
+export default function NavBar({ userData = null }: { userData: IUserSession | null }) {
   /* const [userData, setUserData] = useState<IUserSession | null>(null);
   useEffect(() => {
     const getData = async () => {
@@ -81,7 +82,72 @@ export default function NavBar({userData = null}: {userData: IUserSession | null
 function UserDropdown({ userData }: { userData: IUserSession | null }) {
   return (
     <div>
-      <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+      <Popover
+        trigger="click"
+        aria-labelledby="profile-popover"
+        content={
+          <div className="w-64">
+            <div className="mb-2 flex items-center px-3 pt-3 justify-between">
+              <a>
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src="/favicon.ico"
+                  alt="USER_IMAGE"
+                />
+              </a>
+              <div>
+                <button
+                  type="button"
+                  className="rounded-lg bg-gray-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                >
+                  Ver compañias
+                </button>
+              </div>
+            </div>
+            <div className="px-3">
+              <p id="profile-popover" className="text-base font-semibold leading-none text-gray-900 dark:text-white">
+                <a>{userData?.fullname}</a>
+              </p>
+              <p className="mb-2 text-sm font-normal">
+                <a className="hover:underline dark:text-gray-500">
+                  {userData?.email}
+                </a>
+              </p>
+              <p className=" text-sm">
+                <a className="font-semibold text-gray-600 dark:text-gray-400">
+                  {RoleObject.admin === userData?.role ? "Administrador" : RoleObject.partner === userData?.role ? "Socio" : "Usuario"}
+                </a>
+                {" "} <span className=" text-gray-800 dark:text-gray-300">en</span> <span className="font-bold text-red-600 dark:text-red-600">Mi</span><span className="font-bold text-gray-800 dark:text-gray-300">Precio.</span>
+              </p>
+            </div>
+            <ul className="divide-y divide-gray-100 rounded-lg dark:divide-gray-600  py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
+              <li>
+                <Link to="/home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Inicio</Link>
+              </li>
+              <li>
+                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Perfil</Link>
+              </li>
+              <li>
+                <Link to="/changepassword" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</Link>
+              </li>
+              <div className="divide-y divide-gray-700 dark:divide-gray-200">
+                <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-600 dark:text-gray-200">Salir</Link>
+              </div>
+            </ul>
+
+          </div>
+        }
+      >
+        <button id="dropdownAvatarNameButton" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+          <span className="sr-only">Abrir menu de usuario</span>
+          <img className="w-8 h-8 me-2 rounded-full" src="/favicon.ico" alt="user photo" />
+          {userData?.fullname ?? ""}
+          <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+          </svg>
+        </button>
+      </Popover>
+      {/* <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
         <span className="sr-only">Abrir menu de usuario</span>
         <img className="w-8 h-8 me-2 rounded-full" src="/favicon.ico" alt="user photo" />
         {userData?.fullname ?? ""}
@@ -111,7 +177,7 @@ function UserDropdown({ userData }: { userData: IUserSession | null }) {
         <div className="py-2">
           <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-500 dark:text-gray-200">Salir</Link>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -1,13 +1,36 @@
 import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
-import type { ICategory } from "~/category/category";
-import PrimaryButton from "~/components/primaryButton";
+import type { IProduct } from "~/product/product";
+import PrimaryButton, { ModalButton } from "~/components/primaryButton";
+import { useFetcher } from "react-router";
+import { addProductStoreSchema, type TaddProductStoreSchema } from "./storeSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import type { GenericError } from "~/interfaces/error";
+import LoadingButton from "~/components/loadingButton";
 export default function AddStoreProductModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    async function loadData(){
-        const data = await fetch("http://localhost:8000/api/v1/category/");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [categories, setCategories] = useState<IProduct[]>([]);
+    const [data, setData] = useState<GenericError | null>(null);
+    const fetcher = useFetcher();
+    const {
+        register,
+        trigger,
+        handleSubmit,
+        formState: { errors, isSubmitting, isValid, isDirty },
+        reset,
+    } = useForm<TaddProductStoreSchema>({
+        resolver: zodResolver(addProductStoreSchema),
+        mode: "all",
+    });
+    useEffect(() => {
+        setLoading(fetcher.state !== "idle");
+        setData(fetcher.data);
+    }, [fetcher]);
+    async function loadData() {
+        const data = await fetch("http://localhost:8000/api/v1/product/");
         const json = await data.json();
         setCategories(json);
         console.table(json);
@@ -25,49 +48,93 @@ export default function AddStoreProductModal() {
             </PrimaryButton>
             <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
-                    <strong>Agregar nuevo producto</strong>
+                    <strong>Agregar nuevo producto a la tienda</strong>
                 </ModalHeader>
                 <ModalBody>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
-                        <div>
-                            <Label htmlFor="name">Nombre</Label>
-                            <div className="mt-1">
-                                <TextInput
-                                    id="name"
-                                    name="name"
-                                    placeholder="Pepsi"
-                                />
+                    <fetcher.Form method="POST" className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
+
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="product">Selecciona un producto</Label>
+                                </div>
+                                <Select id="product" {...register("product_uid")} required>
+                                    {categories.map((product) => (
+                                        <option key={product.uid} value={product.uid}>{product.name}</option>
+                                    ))}
+                                </Select>
+                                {errors?.product_uid?.message && (
+                                    <p className="text-red-500 dark:text-red-600">{`${errors?.product_uid?.message}`}</p>
+                                )}
                             </div>
-                        </div>
-                        <div>
-                            <Label htmlFor="description">Descripción</Label>
-                            <div className="mt-1">
-                                <TextInput
-                                    id="description"
-                                    name="description"
-                                    placeholder="Una bebida refrescante"
-                                    type="description"
-                                />
+                            <div>
+                                <Label htmlFor="price">Precio</Label>
+                                <div className="mt-1">
+                                    <TextInput
+                                        {...register('price', {
+                                            setValueAs: (v) => v === "" ? undefined : parseInt(v, 10),
+                                        })}
+                                        id="price"
+                                        name="price"
+                                        placeholder="8.0"
+                                        type="number"
+                                    />
+                                </div>
+                                {errors?.price?.message && (
+                                    <p className="text-red-500 dark:text-red-600">{`${errors?.price?.message}`}</p>
+                                )}
+                            </div>
+                            <div>
+                                <Label htmlFor="wholesale_price">Precio al mayor</Label>
+                                <div className="mt-1">
+                                    <TextInput
+                                        {...register('wholesale_price', {
+                                            setValueAs: (v) => v === "" ? undefined : parseInt(v, 10),
+                                        })}
+                                        id="wholesale_price"
+                                        name="wholesale_price"
+                                        placeholder="5.5"
+                                        type="number"
+                                    />
+                                </div>
+                                {errors?.wholesale_price?.message && (
+                                    <p className="text-red-500 dark:text-red-600">{`${errors?.wholesale_price?.message}`}</p>
+                                )}
+                            </div>
+                            <div>
+                                <Label htmlFor="discount">Descuento</Label>
+                                <div className="mt-1">
+                                    <TextInput
+                                        {...register('discount', {
+                                            setValueAs: (v) => v === "" ? undefined : parseInt(v, 10),
+                                        })}
+                                        id="discount"
+                                        name="discount"
+                                        placeholder="10%"
+                                        type="number"
+                                    />
+                                </div>
+                                {errors?.discount?.message && (
+                                    <p className="text-red-500 dark:text-red-600">{`${errors?.discount?.message}`}</p>
+                                )}
                             </div>
                         </div>
 
-                        <div>
-                            <div className="mb-2 block">
-                                <Label htmlFor="category">Selecciona una categoria</Label>
-                            </div>
-                            <Select id="category" required>
-                                {categories.map((category) => (
-                                    <option key={category.uid} value={category.uid}>{category.name}</option>
-                                ))}
-                            </Select>
+                        <div className="pt-2 pb-2">
+                            {Array.isArray(data?.errors) ? (
+                                data?.errors.map((error: string) => (
+                                    <p key={error} className="text-red-500 dark:text-red-600">{`${error || ""}`}</p>
+                                ))
+                            ) : (
+                                <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.error || ""}`}</p>
+                            )}
                         </div>
-                    </div>
+
+                        <ModalFooter className="flex justify-end ">
+                            {loading ? <LoadingButton /> : <ModalButton disabled={!isDirty || !isValid} type="submit">Agregar usuario</ModalButton>}
+                        </ModalFooter>
+                    </fetcher.Form>
                 </ModalBody>
-                <ModalFooter className="flex self-end content-end border-0">
-                    <PrimaryButton size="lg" onClick={() => setOpen(false)}>
-                        Agregar
-                    </PrimaryButton>
-                </ModalFooter>
             </Modal>
         </div>
     );
