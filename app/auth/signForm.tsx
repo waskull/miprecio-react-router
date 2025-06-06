@@ -14,7 +14,7 @@ export default function SignUpForm({ actionData }: any) {
   const navigate = useNavigate();
   return (
     <form>
-      <h1 className="mb-3 text-2xl font-bold dark:text-white md:text-3xl">
+      <h1 className="mb-3 text-2xl font-bold text-gray-900 dark:text-gray-200 md:text-3xl">
         Registrar cuenta
       </h1>
       <div className="mb-4 flex flex-col gap-y-3">

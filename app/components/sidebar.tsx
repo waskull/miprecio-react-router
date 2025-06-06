@@ -1,4 +1,4 @@
-import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems, TextInput } from "flowbite-react";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems, Spinner, TextInput } from "flowbite-react";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 import {
@@ -15,9 +15,9 @@ import { Link, useLocation, useNavigate } from "react-router";
 
 const Appsidebar: FC = function () {
   const navigate = useNavigate();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const [currentPage, setCurrentPage] = useState(pathname);
-
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     setCurrentPage(pathname);
   }, [pathname]);
@@ -101,18 +101,39 @@ const Appsidebar: FC = function () {
           </SidebarItemGroup>
           <SidebarItemGroup className="justify-content-end flex-grow-1 pe-3 mb-1 bottom-0 lg:fixed md:relative">
 
-            <SidebarItem
-              color="white"
-              className="text-black hover:text-gray-200 dark:text-white  w-58  hover:bg-red-700 focus:bg-red-700 dark:focus:bg-red-800 dark:hover:bg-red-700 cursor-pointer"
-              onClick={() => navigate("/")}
-              icon={HiOutlineLogout}
-            >
-              Salir
-            </SidebarItem>
+            {loading ? (
+              <SidebarItem
+                color="white"
+                className="text-black hover:text-gray-200 dark:text-white  w-58  hover:bg-red-700 focus:bg-red-700 dark:focus:bg-red-800 dark:hover:bg-red-900 cursor-pointer"
+                icon={HiOutlineLogout}
+              >
+                <div className="flex justify-between">
+                  Saliendo...
+                  <Spinner size="sm" color="success" aria-label="Success spinner example" />
+                </div>
+              </SidebarItem>
+            ) : (
+
+              <SidebarItem
+                color="white"
+                className=" text-black hover:text-gray-200 dark:text-white  w-58 hover:bg-red-700 focus:bg-red-700 dark:focus:bg-red-800 dark:hover:bg-red-700 cursor-pointer" onClick={async () => {
+                  setLoading(true);
+                  fetch("/auth/logout", { method: "POST" }).then(() => {
+                    navigate("/auth/signin");
+                  });
+                }
+                }
+                icon={HiOutlineLogout}
+              >
+                <div className="flex justify-between">
+                  Salir
+                </div>
+              </SidebarItem>
+            )}
           </SidebarItemGroup>
         </SidebarItems>
       </div>
-    </Sidebar>
+    </Sidebar >
   );
 };
 

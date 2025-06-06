@@ -480,10 +480,10 @@ function Contact() {
           <h2 className="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">MiPrecio ofrece sus servicios a mas de <span className="font-extrabold">200,000+</span> compañias en Venezuela</h2>
           <p className="mb-4 font-light">Track work across the enterprise through an open, collaborative platform. Link issues across Jira and ingest data from other software development tools, so your IT support and operations teams have richer contextual information to rapidly respond to requests, incidents, and changes.</p>
           <p className="mb-4 font-medium">Deliver great service experiences fast - without the complexity of traditional ITSM solutions.Accelerate critical development work, eliminate toil, and deploy changes with ease.</p>
-          <a className="inline-flex items-center font-medium ">
+          <p className="inline-flex items-center font-medium ">
             Ponte en contacto con nosotros enviando un correo a &nbsp;
             <Link to="mailto:miprecio@gmail.com" className="text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700"> miprecio@gmail.com</Link>
-          </a>
+          </p>
         </div>
       </div>
     </section>

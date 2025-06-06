@@ -67,7 +67,7 @@ export default function UserList({ data }: { data: IUser[] }): JSX.Element {
                             </td>
                             <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
                                 <div className="flex justify-end gap-x-2">
-                                    <EditUserModal />
+                                    <EditUserModal uid={u.uid}   />
                                     <DeleteModal title="Eliminar usuario" desc="¿Estas seguro de que desas borrar este usuario?" deleteFunc={async () => {
                                         console.log("Borrando producto: " + u.uid);
                                         await fetch(`users/delete/${u.uid}`, { method: "POST" });

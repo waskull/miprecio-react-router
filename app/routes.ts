@@ -5,6 +5,7 @@ export default [
     layout("./auth/_auth.tsx", [
         route("auth/signin", "./auth/_auth.auth.login.tsx"),
         route("auth/signup", "./auth/_auth.auth.signup.tsx"),
+        route("auth/logout", "./auth/authLogoutAction.tsx"),
       ]),
       layout("./dashboard/_dashboard.tsx", [
         route("home", "./dashboard/_dashboard.dashboard.tsx"),

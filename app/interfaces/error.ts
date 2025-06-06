@@ -7,7 +7,7 @@ export interface GenericError {
     message?: string,
     error_code?: number
     detail?: string;
-    error: string
+    error: string | boolean;
     errors: string[]
 }
 

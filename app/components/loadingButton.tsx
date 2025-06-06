@@ -3,7 +3,7 @@ export const LoadingButton = () => {
       <button
         disabled={true}
         type="button"
-        className="me-2 inline-flex cursor-not-allowed items-center rounded-lg bg-gray-400 px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:ring-gray-300 dark:bg-gray-500"
+        className="me-2 w-full inline-flex cursor-not-allowed items-center rounded-lg bg-gray-400 px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:ring-gray-300 dark:bg-gray-500"
       >
         <svg
           aria-hidden="true"

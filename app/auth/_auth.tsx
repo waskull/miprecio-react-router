@@ -1,8 +1,10 @@
-import { Outlet, redirect, useNavigate } from "react-router";
+import { Outlet, redirect, useLocation, useNavigate } from "react-router";
 import { Button, Card, DarkThemeToggle, useThemeMode } from "flowbite-react";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { commitSession, destroySession, getSession } from "~/sessions.server";
+import type { IUserSession } from "~/interfaces/user";
+import { getLoggedUserInfo } from "./authService";
 import type { Route } from "./+types/_auth";
-import { useState } from "react";
 /* 
 import type { Route } from "./+types/_auth";
 import { commitSession, getSession } from "~/sessions.server";
@@ -18,11 +20,41 @@ export async function loader({
     return{};
 } */
 
-export async function loader({}: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
+    const path = context.pathname as string;
     try {
-        return {};
+        const session = await getSession(
+            request.headers.get("Cookie")
+        );
+        const accessToken = session.get("access_token");
+        const user = session.get('user') as IUserSession;
+        if (accessToken && user?.email) {
+            console.log("me");
+            const userInfo = await getLoggedUserInfo(accessToken);
+            console.log(userInfo);
+            if (userInfo?.email) {
+                /* const response = new Response(JSON.stringify(userInfo), { status: 200, headers: { "Set-Cookie": await commitSession(session) } });
+                return response; */
+                return redirect("/home");
+            }
+            else if (userInfo?.error_code === "invalid_token" || userInfo?.error_code === "token_revoked") {
+                return redirect("/", {
+                    headers: {
+                        "Set-Cookie": await destroySession(session),
+                    },
+                });
+            }
+        }
+        else {
+            const redirectTo = path.includes("signup") ? "/auth/signup" : "/auth/signin";
+            return redirect(redirectTo, {
+                headers: {
+                    "Set-Cookie": await commitSession(session),
+                },
+            });
+        }
     } catch (e) {
-        return [];
+        return { error: e };
     }
 }
 
@@ -30,7 +62,7 @@ export default function AuthLayout({
     loaderData,
 }: Route.ComponentProps) {
     const navigate = useNavigate();
-    const [data, setData] = useState(loaderData);
+    //const [data, setData] = useState(loaderData);
     const { toggleMode, computedMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
 
@@ -42,14 +74,11 @@ export default function AuthLayout({
                     src="/favicon.ico"
                     className="mr-3 h-12"
                 />
-                <span onClick={() => navigate("/")} className="self-center whitespace-nowrap text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+                <span onClick={() => navigate("/")} className="self-center cursor-pointer whitespace-nowrap text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
                     MiPrecio
                 </span>
-                <Button size="sm" className="ring-0  ring-transparent" color="transparent" onClick={() => {
-                    toggleMode();
-                }}>
-                    {isDarkMode ? <MdOutlineDarkMode className="text-md text-gray-400" /> : <MdOutlineLightMode className="text-md text-gray-700" />}
-                </Button>
+                <DarkThemeToggle>                    
+                </DarkThemeToggle>
             </div>
             <Card
                 horizontal

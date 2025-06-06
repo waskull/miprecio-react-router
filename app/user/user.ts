@@ -10,5 +10,7 @@ export interface IUser extends ICreatedBy{
   update_at?: Date;
   phone?: string;
   address?: string;
+  dni?: string;
+  birthdate?: string;
   is_verified: boolean;
 }

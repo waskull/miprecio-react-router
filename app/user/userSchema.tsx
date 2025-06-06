@@ -61,7 +61,6 @@ export type TeditUserPasswordSchema = z.infer<typeof editUserPasswordSchema>;
 
 export const editUserSchema = z
     .object({
-        email: z.string({ message: "El correo debe de ser una cadena de caracteres" }).trim().email("Debes proveer un correo valido"),
         fullname: z
             .string({ message: "El nombre debe de ser una cadena de caracteres" })
             .min(3, "El nombre debe de tener minimo 3 caracteres")
@@ -75,7 +74,7 @@ export const editUserSchema = z
             .string({ message: "La cedula debe de ser una cadena de caracteres" })
             .min(5, "La cedula debe de tener minimo 5 caracteres")
             .max(50, "La ceduladebe de tener maximo 50 caracteres").optional(),
-        rol: z.nativeEnum(RoleObject, { errorMap: () => { return { message: "El rol debe de ser uno valido." } } }),
+        role: z.nativeEnum(RoleObject, { errorMap: () => { return { message: "El rol debe de ser uno valido." } } }),
         address: z
             .string({ message: "La dirección debe de ser una cadena de caracteres" })
             .min(5, "La dirección debe de tener minimo 5 caracteres")

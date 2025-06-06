@@ -23,6 +23,7 @@ export async function loader({ request }: Route.LoaderArgs) {
         const res = await fetch("http://localhost:8000/api/v1/auth/refresh_token", { method: "GET", headers: { authorization: `Bearer ${session.get("refresh_token")}` } });
         const result = await res.json();
         if (result?.error_code === "invalid_token") {
+            console.log("token invalido")
             return redirect("/auth/signin", {
                 headers: {
                     "Set-Cookie": await commitSession(session),

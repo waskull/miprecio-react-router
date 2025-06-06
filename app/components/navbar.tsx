@@ -1,4 +1,4 @@
-import { Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, Popover, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
+import { Avatar, Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, Popover, Spinner, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
 import { Link, useLocation } from "react-router";
 import { HiCog, HiCurrencyDollar, HiLogout, HiViewGrid } from "react-icons/hi";
 import AddUserModal from "../user/addUserModal";
@@ -9,6 +9,7 @@ import type { IUserSession } from "~/interfaces/user";
 import { RoleObject } from "~/util/role-enum";
 import { Suspense, useEffect, useState } from "react";
 import PrimaryButton from "./primaryButton";
+import { set } from "zod/v4";
 export default function NavBar({ userData = null }: { userData: IUserSession | null }) {
   /* const [userData, setUserData] = useState<IUserSession | null>(null);
   useEffect(() => {
@@ -68,9 +69,26 @@ export default function NavBar({ userData = null }: { userData: IUserSession | n
               <ToggleSwitch label={computedMode === lightMode ? "🌜" : "🌞"} checked={computedMode === lightMode ? true : false} onChange={() => toggleMode()}></ToggleSwitch>
 
 
-              <Suspense fallback={<div>Cargando...</div>}>
-                <UserDropdown userData={userData} />
-              </Suspense>
+
+              <UserDropdown userData={userData} />
+              {/* <Dropdown
+                label={<div className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white">
+                  <Avatar alt="User settings" img="/favicon.ico" rounded />
+                  <span className="ms-2">{userData?.fullname}</span>
+                </div>}
+                arrowIcon={false}
+                inline
+              >
+                <DropdownHeader>
+                  <span className="block text-sm">{RoleObject.admin === userData?.role ? "Administrador" : RoleObject.partner === userData?.role ? "Socio" : "Usuario"}</span>
+                  <span className="block truncate text-sm font-medium">{userData?.email}</span>
+                </DropdownHeader>
+                <DropdownItem>Inicio</DropdownItem>
+                <DropdownItem>Editar perfil</DropdownItem>
+                <DropdownItem>Cambiar contraseña</DropdownItem>
+                <DropdownDivider />
+                <DropdownItem className="text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 focus:bg-red-500 focus:hover:bg-red-600 dark:text-gray-200">Salir</DropdownItem>
+              </Dropdown> */}
             </div>
           </div>
         </div>
@@ -80,6 +98,7 @@ export default function NavBar({ userData = null }: { userData: IUserSession | n
 };
 
 function UserDropdown({ userData }: { userData: IUserSession | null }) {
+  const [loading, setLoading] = useState(false);
   return (
     <div>
       <Popover
@@ -130,9 +149,31 @@ function UserDropdown({ userData }: { userData: IUserSession | null }) {
               <li>
                 <Link to="/changepassword" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</Link>
               </li>
-              <div className="divide-y divide-gray-700 dark:divide-gray-200">
-                <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-600 dark:text-gray-200">Salir</Link>
-              </div>
+              {/* <div className="divide-y divide-gray-700 dark:divide-gray-200">
+                <Link to="/" onClick={
+                  async () => {
+                    setLoading(true);
+                    if (!loading) await fetch("/auth/logout", { method: "POST" });
+                  }
+                }
+                  className="flex justify-between px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-600 dark:text-gray-200 ">{loading ? "Saliendo..." : "Salir"} {loading && <Spinner size="sm" color="success" aria-label="Success spinner example" />}</Link>
+              </div> */}
+              {loading ? (
+                <div className="divide-y divide-gray-700 dark:divide-gray-200">
+                  <Link to="/"
+                    className="flex justify-between px-4 py-2 text-sm text-gray-500 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-600 dark:text-gray-400 ">Saliendo... <Spinner size="sm" color="success" aria-label="Success spinner example" /></Link>
+                </div>
+              ) : (
+                <div className="divide-y divide-gray-700 dark:divide-gray-200">
+                  <Link to="/" onClick={
+                    async () => {
+                      setLoading(true);
+                      if (!loading) await fetch("/auth/logout", { method: "POST" });
+                    }
+                  }
+                    className="flex justify-between px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-600 dark:text-gray-200 ">Salir</Link>
+                </div>
+              )}
             </ul>
 
           </div>

@@ -1,12 +1,12 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { Form, useFetcher, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingButton from "../components/loadingButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInSchema, type TsignInSchema } from "./authSchemas";
 import { useForm } from "react-hook-form";
 import { signIn } from "./authService";
-import type { signInError } from "~/interfaces/error";
+import type { GenericError, signInError } from "~/interfaces/error";
 async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -45,11 +45,16 @@ export default function LoginForm({ actionData }: any) {
     resolver: zodResolver(SignInSchema),
     mode: "all",
   });
-
+  const [data, setData] = useState<GenericError | null>(null);
+  useEffect(() => {
+    console.log(fetcher);
+    setLoading(fetcher?.state !== "idle");
+    setData(fetcher?.data);
+  }, [fetcher]);
   return (
     <div>
       <fetcher.Form method="post">
-        <h1 className="mb-3 text-2xl font-bold dark:text-white md:text-3xl">
+        <h1 className="mb-3 text-2xl font-bold text-gray-900 dark:text-gray-200 md:text-3xl">
           Inicio de sesión
         </h1>
         <div className="mb-4 flex flex-col gap-y-3">
@@ -98,7 +103,7 @@ export default function LoginForm({ actionData }: any) {
           ) : (
             <p className={actionData?.error ? "text-red-500 dark:text-red-600 mb-4" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${actionData?.message || ""}`}</p>
           )}
-          {!isSubmitting ? (
+          {!loading ? (
             <Button
               type="submit"
               /* onClick={handleSubmit(onSubmit)} */
@@ -110,11 +115,20 @@ export default function LoginForm({ actionData }: any) {
             <LoadingButton />
           )}
         </div>
+        <div className="pb-2">
+          {Array.isArray(data?.errors) ? (
+            data?.errors.map((error: string) => (
+              <p key={error} className="text-red-500 dark:text-red-600">{`${error || ""}`}</p>
+            ))
+          ) : (
+            <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.error || ""}`}</p>
+          )}
+        </div>
         <p className="text-sm text-gray-500 dark:text-gray-300">
           No tienes una cuenta?&nbsp;
           <a
             onClick={() => {
-              if (!isSubmitting) {
+              if (!loading) {
                 navigate("/auth/signup");
               }
             }}
