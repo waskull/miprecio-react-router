@@ -1,10 +1,10 @@
-import { Button, Modal, ModalHeader, ModalBody } from "flowbite-react";
+import { Button, Modal, ModalHeader, ModalBody, Spinner } from "flowbite-react";
 import { type JSX, useState } from "react";
 import { HiTrash, HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DeleteModal({ deleteFunc, title = "Borrar Registro", desc = "Deseas borrar este registro?" }: { deleteFunc: () => void, title: string, desc: string }): JSX.Element {
-    const [isOpen, setOpen] = useState(false);
-
+    const [isOpen, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     return (
         <div>
             <Button size="sm" color="red" onClick={() => setOpen(true)}>
@@ -21,24 +21,32 @@ export default function DeleteModal({ deleteFunc, title = "Borrar Registro", des
                     <div className="flex flex-col items-center gap-y-6 text-center">
                         <HiOutlineExclamationCircle className="text-7xl text-red-500" />
                         <p className="text-xl text-gray-500 dark:text-gray-200">
-                            {desc}
+                            {loading ? "Borrando..." : desc}
                         </p>
                         <div className="flex items-center gap-x-3">
-                            <Button color="red" className="w-24" onClick={async () => {
-                                try{
-                                    await deleteFunc();
-                                    setOpen(false);
+                            {!loading ? (
+                                <Button color="red" className="w-24" onClick={async () => {
+                                    try {
+                                        setLoading(true);
+                                        await deleteFunc();
+                                        setOpen(false);
+                                        setLoading(false);
+                                    }
+                                    catch (e) {
+                                        console.log(e);
+                                        setLoading(false);
+                                    }
                                 }
-                                catch(e){
-                                    console.log(e);
-                                }
+                                }>
+                                    Si
+                                </Button>
+                            ) : (
+                                <Button color="transparent" size="md"><Spinner size="md" color="success" aria-label="Success spinner example" /></Button>
+                            )
                             }
-                            }>
-                                Si
-                            </Button>
-                            <Button color="gray" onClick={() => setOpen(false)}>
+                            {!loading && <Button color="gray" onClick={() => setOpen(false)}>
                                 No
-                            </Button>
+                            </Button>}
                         </div>
                     </div>
                 </ModalBody>

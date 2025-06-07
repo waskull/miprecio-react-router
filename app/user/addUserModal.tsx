@@ -20,10 +20,7 @@ export default function AddUserModal() {
     }, [fetcher]);
     const {
         register,
-        trigger,
-        handleSubmit,
         formState: { errors, isSubmitting, isValid, isDirty },
-        reset,
     } = useForm<TaddUserSchema>({
         resolver: zodResolver(addUserSchema),
         mode: "all",

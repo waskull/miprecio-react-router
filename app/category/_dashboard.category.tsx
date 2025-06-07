@@ -4,6 +4,9 @@ import CategoryList from "./CategoryList";
 import type { Route } from "./+types/_dashboard.category";
 import { useLoaderData } from "react-router";
 import type { ICategory } from "./category";
+import { getSession } from "~/sessions.server";
+import type { TaddCategorySchema } from "./categorySchema";
+import { addCategory } from "./categoryService";
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {
@@ -12,6 +15,22 @@ export async function loader({ request }: Route.LoaderArgs) {
         return { data: json || [] };
     }catch(e){
         return [];
+    }
+}
+
+export async function action({ request }: Route.ActionArgs) {
+    const session = await getSession(request.headers.get("Cookie"));
+    const formData = await request.formData();
+    console.log(formData);
+    try {
+        const data = Object.fromEntries(formData) as TaddCategorySchema;
+        const result = await addCategory(data, session.get("access_token") ?? "");
+        console.log(result);
+        if (!result?.message) return { error: "Algo salio mal al agregar la categoria", errors: result }
+        return "Categoria ha sido creada con exito";
+    } catch (e) {
+        console.log("error: ", e)
+        throw new Error("Algo salio mal");
     }
 }
 

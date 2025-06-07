@@ -1,9 +1,11 @@
 import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from "flowbite-react";
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import type { ICategory } from "./category";
+import { useNavigate } from "react-router";
 
 export default function CategoryList({ data }: { data: ICategory[] }): JSX.Element {
+    const navigate = useNavigate();
     return (
         <div className="relative shadow-md sm:rounded-lg">
             <table className="w-full min-w-full divide-y mt-0 dark:divide-gray-600 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -40,7 +42,11 @@ export default function CategoryList({ data }: { data: ICategory[] }): JSX.Eleme
                             </td>
                             <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
                                 <div className="flex justify-end gap-x-2">
-                                    <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => console.log("Borrando producto")} />
+                                    <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => {
+                                        console.log("Borrando categoria: " + u.uid);
+                                        await fetch(`categories/delete/${u.uid}`, { method: "POST" });
+                                        navigate('.', { replace: true });
+                                    }} />
                                 </div>
                             </td>
 

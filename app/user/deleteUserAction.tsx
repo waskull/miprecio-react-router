@@ -1,5 +1,4 @@
 import { getSession } from "~/sessions.server";
-import type { TaddUserSchema } from "./userSchema";
 import { deleteUser } from "./userService";
 
 export async function action({ request, params }: any) {

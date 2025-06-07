@@ -4,6 +4,9 @@ import { useEffect, useState, type JSX } from "react";
 import ProductList from "./productList";
 import type { IProduct } from "./product";
 import { useLoaderData } from "react-router";
+import { getSession } from "~/sessions.server";
+import type { TaddProductSchema } from "./productSchema";
+import { addProduct } from "./productService";
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {
@@ -13,6 +16,22 @@ export async function loader({ request }: Route.LoaderArgs) {
         return { data: json || [] }
     } catch (e) {
         return [];
+    }
+}
+
+export async function action({ request }: Route.ActionArgs) {
+    const session = await getSession(request.headers.get("Cookie"));
+    const formData = await request.formData();
+    console.log(formData);
+    try {
+        const data = Object.fromEntries(formData) as TaddProductSchema;
+        const result = await addProduct(data, session.get("access_token") ?? "");
+        console.log(result);
+        if (!result?.message) return { error: "Algo salio mal al agregar el producto", errors: result }
+        return "El producto ha sido creado con exito";
+    } catch (e) {
+        console.log("error: ", e)
+        throw new Error("Algo salio mal");
     }
 }
 

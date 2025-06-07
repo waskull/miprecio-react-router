@@ -1,8 +1,10 @@
 import type { JSX } from "react";
+import { useNavigate } from "react-router";
 import DeleteModal from "~/components/DeleteModal";
 import type { IProduct } from "~/product/product";
 
 export default function ProductList({ data }: { data: IProduct[] }): JSX.Element {
+    const navigate = useNavigate();
     return (
         <div className="relative shadow-md sm:rounded-lg">
             <table className="w-full min-w-full divide-y mt-0 dark:divide-gray-600 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -45,7 +47,10 @@ export default function ProductList({ data }: { data: IProduct[] }): JSX.Element
                             </td>
                             <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
                                 <div className="flex justify-end gap-x-2">
-                                    <DeleteModal title="Eliminar product" desc="¿Estas seguro de que desas borrar este producto?" deleteFunc={async () => console.log("Borrando producto")} /> </div>
+                                    <DeleteModal title="Eliminar producto" desc="¿Estas seguro de que desas borrar este producto?" deleteFunc={async () => {
+                                        await fetch(`products/delete/${u.uid}`, { method: "POST" });
+                                        navigate('.', { replace: true });
+                                    }} /> </div>
                             </td>
                         </tr>
                     ))}
