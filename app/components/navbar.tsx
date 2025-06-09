@@ -1,15 +1,12 @@
-import { Avatar, Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Label, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle, Popover, Spinner, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
+import { Label, Popover, Spinner, TextInput, ToggleSwitch, useThemeMode, type ThemeMode } from "flowbite-react";
 import { Link, useLocation } from "react-router";
-import { HiCog, HiCurrencyDollar, HiLogout, HiViewGrid } from "react-icons/hi";
 import AddUserModal from "../user/addUserModal";
 import AddCategoryModel from "~/category/addCategoryModel";
 import AddProductModal from "~/product/addProductModal";
 import AddCompanyModal from "~/company/addCompanyModal";
 import type { IUserSession } from "~/interfaces/user";
 import { RoleObject } from "~/util/role-enum";
-import { Suspense, useEffect, useState } from "react";
-import PrimaryButton from "./primaryButton";
-import { set } from "zod/v4";
+import { useState } from "react";
 export default function NavBar({ userData = null }: { userData: IUserSession | null }) {
   /* const [userData, setUserData] = useState<IUserSession | null>(null);
   useEffect(() => {
@@ -64,7 +61,7 @@ export default function NavBar({ userData = null }: { userData: IUserSession | n
             {pathname === "/users" && <AddUserModal />}
             {pathname === "/categories" && <AddCategoryModel />}
             {pathname === "/products" && <AddProductModal />}
-            {pathname === "/companies" && <AddCompanyModal />}
+            {pathname === "/companies" && <AddCompanyModal isAdmin={RoleObject.admin === userData?.role} />}
             <div className="flex items-center gap-x-3">
               <ToggleSwitch label={computedMode === lightMode ? "🌜" : "🌞"} checked={computedMode === lightMode ? true : false} onChange={() => toggleMode()}></ToggleSwitch>
 

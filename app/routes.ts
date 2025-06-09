@@ -10,6 +10,8 @@ export default [
   layout("./dashboard/_dashboard.tsx", [
     route("home", "./dashboard/_dashboard.dashboard.tsx"),
     route("companies", "./company/_dashboard.company.tsx"),
+    route("companies/:id", "./company/editCompanyAction.tsx"),
+    route("companies/delete/:id", "./company/deleteCompanyAction.tsx"),
     route("categories", "./category/_dashboard.category.tsx"),
     route("categories/:id", "./category/editCategoryAction.tsx"),
     route("categories/delete/:id", "./category/deleteCategoryAction.tsx"),

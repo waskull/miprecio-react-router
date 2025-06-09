@@ -13,7 +13,8 @@ export const addCompanySchema = z
         partner_uid: z
             .string({ message: "Debes de proveer un socio" })
             .min(32, "El codigo del socio debe de tener minimo 32 caracteres")
-            .max(48, "El codigo del socio debe de tener maximo 48 caracteres"),
+            .max(48, "El codigo del socio debe de tener maximo 48 caracteres")
+            .optional(),
     });
 
 export type TaddCompanySchema = z.infer<typeof addCompanySchema>;
