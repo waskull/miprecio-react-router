@@ -6,8 +6,8 @@ Cliente web para [MiPrecio](https://github.com/waskull/miprecio).
 
 - 🚀 React-Router v7 en modo Frameowk
 - ⚡️ React-Flowbite + TaildwindCSS
-- 📦 Autenticación usando Cookies
-- 🔄 Validación de formularios usando Zod + React-Hooks-Forms
+- 📦 Validación de formularios usando Zod + React-Hooks-Forms 
+- 🔄 Autenticación usando Cookies
 - 🔒 TypeScript
 - 📖 [Backend](https://github.com/waskull/miprecio)
 
