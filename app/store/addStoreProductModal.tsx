@@ -28,12 +28,15 @@ export default function AddStoreProductModal() {
     useEffect(() => {
         setLoading(fetcher.state !== "idle");
         setData(fetcher.data);
+        if (fetcher?.data?.success) {
+            setOpen(false);
+            reset();
+        }
     }, [fetcher]);
     async function loadData() {
         const data = await fetch("http://localhost:8000/api/v1/product/");
         const json = await data.json();
         setCategories(json);
-        console.table(json);
     }
     useEffect(() => {
         loadData();
@@ -52,7 +55,7 @@ export default function AddStoreProductModal() {
                 </ModalHeader>
                 <ModalBody>
                     <fetcher.Form method="POST" className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
 
                             <div>
                                 <div className="mb-2 block">

@@ -1,12 +1,10 @@
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Accordion, AccordionContent, AccordionPanel, AccordionTitle, Card } from "flowbite-react";
 import { useState, type JSX } from "react";
 import { Link } from "react-router";
-import DeleteModal from "~/components/DeleteModal";
 import type { ICompanyStore } from "~/store/store";
 
 export default function StoreList({ data }: { data: ICompanyStore[] }): JSX.Element {
     const [selected, setSelected] = useState<string | null>(null);
-    const style: string = "flex items-center bg-zinc-50 rounded-lg  min-w-md shadow sm:flex dark:bg-gray-800";
+    //const style: string = "flex items-center bg-zinc-50 rounded-lg  min-w-md shadow sm:flex dark:bg-gray-800";
     return (
         <div>
             <section className="bg-gray-50 dark:bg-gray-900">

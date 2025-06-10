@@ -3,8 +3,10 @@ import type { ICompanyStore, IStore } from "./store";
 import DeleteModal from "~/components/DeleteModal";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import AddStoreProductModal from "./addStoreProductModal";
+import { useNavigate } from "react-router";
 
 export default function StoreDetail({ data }: { data: ICompanyStore }) {
+    const navigate = useNavigate();
     return (
         <section className="bg-gray-50 px-8 antialiased dark:bg-gray-900">
             <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -14,7 +16,7 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                     <AddStoreProductModal />
                 </div>
                 <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
-                    {data.store.map((s:IStore) => (
+                    {data.store.map((s: IStore) => (
                         <div key={s.product.uid} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                             <div className="h-56 w-full">
                                 <a href="#">
@@ -97,7 +99,10 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                                                 <HiOutlinePencilAlt className="text-lg" />
                                             </div>
                                         </EditButton>
-                                        <DeleteModal title={`Borrar producto de la tienda`} desc={`¿Estas seguro de que deseas quitar ${s.product.name} de esta tienda?`} deleteFunc={async () => console.log("Borrando producto")} />
+                                        <DeleteModal title={`Borrar producto de la tienda`} desc={`¿Estas seguro de que deseas quitar ${s.product.name} de esta tienda?`} deleteFunc={async () => {
+                                            await fetch(`products/delete/${s.product.uid}`, { method: "POST" });
+                                            navigate('.', { replace: true });
+                                        }} />
 
                                     </div>
                                 </div>
