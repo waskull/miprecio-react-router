@@ -20,6 +20,8 @@ export default [
     route("products/:id", "./product/editProductAction.tsx"),
     route("store", "./store/_dashboard.store.tsx"),
     route("store/:id", "./store/_dashboard.store.$id.tsx"),
+    route("store/edit/:id", "./store/editStoreAction.tsx"),
+    route("store/delete/:id/product/:product_uid", "./store/deleteStoreAction.tsx"),
     route("users", "./user/_dashboard.user.tsx"),
     route("users/:id", "./user/editUserAction.tsx"),
     route("users/delete/:id", "./user/deleteUserAction.tsx"),

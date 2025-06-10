@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import LoadingButton from "~/components/loadingButton";
+
 export default function AddStoreProductModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,8 +19,7 @@ export default function AddStoreProductModal() {
     const {
         register,
         trigger,
-        handleSubmit,
-        formState: { errors, isSubmitting, isValid, isDirty },
+        formState: { errors, isValid, isDirty },
         reset,
     } = useForm<TaddProductStoreSchema>({
         resolver: zodResolver(addProductStoreSchema),
@@ -129,12 +129,12 @@ export default function AddStoreProductModal() {
                                     <p key={error} className="text-red-500 dark:text-red-600">{`${error || ""}`}</p>
                                 ))
                             ) : (
-                                <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.error || ""}`}</p>
+                                <p className={data?.error ? "text-red-500 dark:text-red-600" : "text-gray-900 dark:text-gray-400 mb-4"}>{`${data?.message || ""}`}</p>
                             )}
                         </div>
 
                         <ModalFooter className="flex justify-end ">
-                            {loading ? <LoadingButton /> : <ModalButton disabled={!isDirty || !isValid} type="submit">Agregar usuario</ModalButton>}
+                            {loading ? <LoadingButton /> : <ModalButton disabled={!isDirty || !isValid} type="submit">Agregar producto</ModalButton>}
                         </ModalFooter>
                     </fetcher.Form>
                 </ModalBody>

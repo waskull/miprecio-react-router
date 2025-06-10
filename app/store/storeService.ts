@@ -35,10 +35,11 @@ export async function editProduct(formData: TaddProductStoreSchema, uid: string,
     };
 }
 
-export async function deleteProduct(uid: string, token: string) {
+export async function deleteProduct(uid: string, product_uid: string, token: string) {
     try {
         const result = await fetch(`http://localhost:8000/api/v1/store/${uid}`, {
             method: "DELETE",
+            body: JSON.stringify({ product_uid }),
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${token}`

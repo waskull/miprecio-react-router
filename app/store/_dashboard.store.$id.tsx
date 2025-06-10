@@ -25,12 +25,13 @@ export async function action({ params, request }: any) {
         discount: parseInt(formData.get("discount") as string),
         price: parseFloat(formData.get("price") as string),
         wholesale_price: parseFloat(formData.get("wholesale_price") as string),
-        company_uid : params.id as string
+        company_uid: params.id as string
     }
     try {
-        const data = Object.fromEntries(formData) as TaddProductStoreSchema;
+        //const data = Object.fromEntries(formData) as TaddProductStoreSchema;
         const res = await addStoreProduct(productData, session.get("access_token") ?? "");
         console.log("res", res);
+        if (res?.error) return { message: res?.message, error: true, errors: res };
         return { message: "Producto agregado con exito", success: true };
     } catch (e) {
         console.log(e);
