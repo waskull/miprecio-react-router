@@ -9,7 +9,7 @@ Cliente web para [MiPrecio](https://github.com/waskull/miprecio).
 - 📦 Validación de formularios usando Zod + React-Hooks-Forms 
 - 🔄 Autenticación usando Cookies
 - 🔒 TypeScript
-- 📖 [Backend](https://github.com/waskull/miprecio)
+- 📖 SQL
 
 ## Como Iniciar
 
