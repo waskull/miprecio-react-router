@@ -1,52 +1,49 @@
-# Welcome to React Router!
+# MiPrecio!
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Cliente web para [MiPrecio](https://github.com/waskull/miprecio).
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Tecnologias usadas
 
-## Features
+- 🚀 React-Router v7 en modo Frameowk
+- ⚡️ React-Flowbite + TaildwindCSS
+- 📦 Autenticación usando Cookies
+- 🔄 Validación de formularios usando Zod + React-Hooks-Forms
+- 🔒 TypeScript
+- 📖 [Backend](https://github.com/waskull/miprecio)
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Como Iniciar
 
-## Getting Started
+### Instalación
 
-### Installation
-
-Install the dependencies:
+Instalar dependencias:
 
 ```bash
 npm install
 ```
 
-### Development
+### Desarrollo
 
-Start the development server with HMR:
+Para iniciar el proyecto de modo desarrollo:
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Por defecto tu aplicación funcionara en: `http://localhost:5173`.
 
-## Building for Production
+## Buildear para producción
 
-Create a production build:
+Crear una build de producción:
 
 ```bash
 npm run build
 ```
 
-## Deployment
+## Despliegue
 
-### Docker Deployment
+### Despligue Docker
 
-To build and run using Docker:
+Para buildear y desplegar en docker:
 
 ```bash
 docker build -t my-app .
@@ -55,7 +52,7 @@ docker build -t my-app .
 docker run -p 3000:3000 my-app
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+El container puede ser desplegado en cualquier plataforma que use Docker, incluyendo:
 
 - AWS ECS
 - Google Cloud Run
@@ -64,24 +61,4 @@ The containerized application can be deployed to any platform that supports Dock
 - Fly.io
 - Railway
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+Construido con ❤️ usando React Router.
