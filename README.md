@@ -1,6 +1,6 @@
 # MiPrecio!
 
-Cliente web para [MiPrecio](https://github.com/waskull/miprecio).
+Frotend web para [MiPrecio](https://github.com/waskull/miprecio).
 
 ## Tecnologias usadas
 
