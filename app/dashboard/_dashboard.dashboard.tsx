@@ -1,26 +1,25 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
 import type { Route } from "../dashboard/+types/_dashboard.dashboard";
 import { useEffect, useState, lazy, Suspense, memo, type FC, type JSX } from "react";
-import type { IStore } from "~/store/store";
+import type { ICompanyStore, IStore } from "~/store/store";
 import { data, Link, useLoaderData } from "react-router";
 import type { IProduct } from "~/product/product";
 import type { IUser } from "~/user/user";
 import { RoleObject } from "~/util/role-enum";
-import { en } from "zod/v4/locales";
 
 export async function loader({ params }: Route.LoaderArgs) {
   try {
-    const data = await fetch("http://localhost:8000/api/v1/store/stores");
+    const store = await fetch("http://localhost:8000/api/v1/store/top");
     const products = await fetch("http://localhost:8000/api/v1/product/top");
     const users = await fetch("http://localhost:8000/api/v1/user/top");
-    return { data: await data.json() || [], products: await products.json() || [], users: await users.json() || [] };
+    return { store: await store.json() || [], products: await products.json() || [], users: await users.json() || [] };
   } catch (e) {
     return [];
   }
 }
 
 export default function DashboardPage({ loaderData }: Route.ComponentProps) {
-  const data = useLoaderData() as { data: IStore[], products: IProduct[], users: IUser[] };
+  const data = useLoaderData() as { store: ICompanyStore[], products: IProduct[], users: IUser[] };
   return (
     <div className="">
       <div className="flex flex-col">
@@ -28,10 +27,10 @@ export default function DashboardPage({ loaderData }: Route.ComponentProps) {
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden min-h-screen max-w-screen bg-gray-50 dark:bg-gray-900 shadow pr-6 pl-6">
               <div className="pt-6">
-                <PopularProducts products={data?.products} />
+                <PopularProducts store={data?.store} />
               </div>
               <div className="py-6">
-                <LatestTransactions />
+                <LatestTransactions products={data?.products} />
               </div>
               <LatestCustomers users={data?.users} />
             </div>
@@ -110,21 +109,21 @@ export function Dash({ data }: { data: IStore[] }) {
   )
 }
 
-export function PopularProducts({ products }: { products: IProduct[] }): JSX.Element {
+export function PopularProducts({ store }: { store: ICompanyStore[] }): JSX.Element {
   return (
     <div>
       <div className="rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-2 flex items-center justify-between">
           <div className="shrink-0">
             <span className="text-2xl font-bold leading-none text-gray-900 dark:text-white sm:text-3xl">
-              Productos mas populares<span className="text-2xl font-bold text-gray-700 dark:text-gray-300">.</span>
+              Tiendas mas populares<span className="text-2xl font-bold text-gray-700 dark:text-gray-300">.</span>
             </span>
             <h3 className="text-base font-normal text-gray-600 dark:text-gray-400">
-              {products?.length || 0} productos consultados
+              Estas son las {store?.length} tiendas mas TOP
             </h3>
           </div>
           <div className="flex flex-1 items-center justify-end text-base font-bold text-green-600 dark:text-green-400">
-            12.5%
+            {/* 12.5% 
             <svg
               className="h-5 w-5"
               fill="currentColor"
@@ -137,17 +136,19 @@ export function PopularProducts({ products }: { products: IProduct[] }): JSX.Ele
                 clipRule="evenodd"
               />
             </svg>
+            */}
           </div>
         </div>
-        <SalesChart products={products} />
-        <div className="mt-5 flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-6">
-          <Datepicker />
+        <SalesChart store={store} />
+        <div className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-6">
+          {/* <Datepicker /> */}
+          <div></div>
           <div className="shrink-0">
             <Link
-              to="/products"
+              to="/store"
               className="inline-flex items-center rounded-lg p-2 text-xs font-medium uppercase text-zinc-800 dark:text-zinc-100 hover:bg-gray-100 dark:hover:bg-gray-700 sm:text-sm"
             >
-              Ver productos
+              Ver Tiendas
               <svg
                 className="ml-1 h-4 w-4 sm:h-5 sm:w-5"
                 fill="none"
@@ -170,7 +171,7 @@ export function PopularProducts({ products }: { products: IProduct[] }): JSX.Ele
   );
 };
 
-export function SalesChart({ products }: { products: IProduct[] }) {
+export function SalesChart({ store }: { store: ICompanyStore[] }) {
   const { mode } = useThemeMode();
   const isDarkTheme = mode === "dark";
 
@@ -239,7 +240,7 @@ export function SalesChart({ products }: { products: IProduct[] }) {
       },
     },
     xaxis: {
-      categories: products.map((product) => product.name),
+      categories: store.map((st) => st.name),
       labels: {
         style: {
           colors: [labelColor],
@@ -275,7 +276,7 @@ export function SalesChart({ products }: { products: IProduct[] }) {
           fontWeight: 500,
         },
         formatter: function (value: any) {
-          return value + " consultas";
+          return value + "  consultas";
         },
       },
     },
@@ -305,8 +306,8 @@ export function SalesChart({ products }: { products: IProduct[] }) {
   };
   const series = [
     {
-      name: "Cantidad",
-      data: products.map((product, index) => index + 1),
+      name: "Cantidad:",
+      data: store.map((st, index) => st.store.filter((product: IStore) => !product.is_deleted).length),
       color: isDarkTheme ? "#31C48D" : "#057A55",
     },
   ];
@@ -337,15 +338,15 @@ export function LatestCustomers({ users }: { users: IUser[] }): JSX.Element {
   return (
     <div className="mb-4 h-full max-w-full rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-bold leading-none text-zinc-900 dark:text-white">
+        <h3 className="text-xl capitalize font-bold leading-none text-zinc-900 dark:text-white">
           Ultimos clientes
         </h3>
-        <Link
+        {/* <Link
           to={"/users"}
           className="inline-flex items-center rounded-lg p-2 text-sm font-medium text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700"
         >
           Ver todos
-        </Link>
+        </Link> */}
       </div>
       <div className="flow-root">
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -376,13 +377,14 @@ export function LatestCustomers({ users }: { users: IUser[] }): JSX.Element {
         </ul>
       </div>
       <div className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-6">
-        <Datepicker />
+        {/* <Datepicker /> */}
+        <div></div>
         <div className="shrink-0">
-          <a
-            href="#"
+          <Link
+            to="/users"
             className="inline-flex items-center rounded-lg p-2 text-xs font-medium uppercase text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700 sm:text-sm"
           >
-            Reporte de usuarios
+            VER USUARIOS
             <svg
               className="ml-1 h-4 w-4 sm:h-5 sm:w-5"
               fill="none"
@@ -397,7 +399,7 @@ export function LatestCustomers({ users }: { users: IUser[] }): JSX.Element {
                 d="M9 5l7 7-7 7"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -588,12 +590,12 @@ const AcquisitionOverview: FC = function () {
   );
 };
 
-const LatestTransactions: FC = function () {
+const LatestTransactions = function ({ products }: { products: IProduct[] }) {
   return (
     <div className="rounded-lg bg-gray-100 p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+          <h3 className="mb-2 capitalize text-xl font-bold text-gray-900 dark:text-white">
             Nuevos productos
           </h3>
           <span className="text-base font-normal text-gray-600 dark:text-gray-400">
@@ -601,12 +603,12 @@ const LatestTransactions: FC = function () {
           </span>
         </div>
         <div className="shrink-0">
-          <Link
+          {/* <Link
             to="/products"
             className="rounded-lg p-2 text-sm font-medium text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700"
           >
             Ver todos
-          </Link>
+          </Link> */}
         </div>
       </div>
       <div className="mt-8 flex flex-col">
@@ -620,7 +622,7 @@ const LatestTransactions: FC = function () {
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-6 py-3">
-                        Product name
+                        Producto
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Descripción
@@ -631,17 +633,19 @@ const LatestTransactions: FC = function () {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Apple MacBook Pro 17"
-                      </th>
-                      <td className="px-6 py-4">
-                        Silver
-                      </td>
-                      <td className="px-6 py-4">
-                        Laptop
-                      </td>
-                    </tr>
+                    {products.map((product) => (
+                      <tr key={product.uid} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {product.name}
+                        </th>
+                        <td className="px-6 py-4">
+                          {product.description}
+                        </td>
+                        <td className="px-6 py-4">
+                          {product.category.name}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -652,13 +656,14 @@ const LatestTransactions: FC = function () {
         </div>
       </div>
       <div className="flex items-center justify-between pt-3 sm:pt-6">
-        <Datepicker />
+        {/* Datepicker /> */}
+        <div></div>
         <div className="shrink-0">
-          <a
-            href="#"
+          <Link
+            to="/products"
             className="inline-flex items-center rounded-lg p-2 text-xs font-medium uppercase text-zinc-800 hover:bg-gray-100 dark:text-zinc-100 dark:hover:bg-gray-700 sm:text-sm"
           >
-            Reporte de ventas
+            Ver Productos
             <svg
               className="ml-1 h-4 w-4 sm:h-5 sm:w-5"
               fill="none"
@@ -673,7 +678,7 @@ const LatestTransactions: FC = function () {
                 d="M9 5l7 7-7 7"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

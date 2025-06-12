@@ -22,7 +22,7 @@ export default function SignUpForm({ actionData }: any) {
         <TextInput
           id="email"
           name="email"
-          placeholder="name@company.com"
+          placeholder="correo@correo.com"
           type="email"
         />
       </div>

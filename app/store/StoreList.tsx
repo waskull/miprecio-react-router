@@ -29,7 +29,7 @@ export default function StoreList({ data }: { data: ICompanyStore[] }): JSX.Elem
                                 <p className="mb-5 font-light text-gray-500 dark:text-gray-400">{store.description}.</p>
                                 <div className="flex justify-between truncate items-center">
                                     <div className="flex items-center truncate space-x-4">
-                                        <img className="w-7 h-7 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png" alt="Jese Leos avatar" />
+                                        <img className="w-7 h-7 rounded-full" src="/favicon.ico " alt="Jese Leos avatar" />
                                         <span className="font-medium truncate dark:text-white">
                                             {store.partner.fullname}
                                         </span>
