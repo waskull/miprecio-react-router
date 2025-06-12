@@ -10,6 +10,18 @@ Frotend web para [MiPrecio](https://github.com/waskull/miprecio).
 - 🔄 Autenticación usando Cookies
 - 🔒 TypeScript
 
+## Screenshots
+
+![Login](screenshots/dash_0.png)
+![Registro](screenshots/dash_00.png)
+![Dashboard](screenshots/dash_2.png)
+![Usuarios](screenshots/dash_3.png)
+![Agregar Usuario](screenshots/dash_4.png)
+![Tiendas](screenshots/dash_5.png)
+![Productos de Tiendas](screenshots/dash_6.png)
+![Qr Producto de tienda](screenshots/dash_7.png)
+![Agregar producto a tienda](screenshots/dash_8.png)
+
 ## Como Iniciar
 
 ### Instalación
