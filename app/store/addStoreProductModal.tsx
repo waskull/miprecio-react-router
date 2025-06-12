@@ -10,10 +10,10 @@ import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import LoadingButton from "~/components/loadingButton";
 
-export default function AddStoreProductModal() {
+export default function AddStoreProductModal({ ids }: { ids: string[] }) {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [categories, setCategories] = useState<IProduct[]>([]);
+    const [products, setProducts] = useState<IProduct[]>([]);
     const [data, setData] = useState<GenericError | null>(null);
     const fetcher = useFetcher();
     const {
@@ -34,9 +34,9 @@ export default function AddStoreProductModal() {
         }
     }, [fetcher]);
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/product/");
+        const data = await fetch("http://localhost:8000/api/v1/product/all/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ uids: ids }) });
         const json = await data.json();
-        setCategories(json);
+        setProducts(json);
     }
     useEffect(() => {
         loadData();
@@ -57,19 +57,22 @@ export default function AddStoreProductModal() {
                     <fetcher.Form method="POST" className="grid grid-cols-1 gap-6 sm:grid-cols-1 ">
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
 
-                            <div>
-                                <div className="mb-2 block">
-                                    <Label htmlFor="product">Selecciona un producto</Label>
+
+                            {products.length > 0 && (
+                                <div>
+                                    <div className="mb-2 block">
+                                        <Label htmlFor="product">Selecciona un producto</Label>
+                                    </div>
+                                    <Select id="product" {...register("product_uid")} required>
+                                        {products?.map((product) => (
+                                            <option key={product?.uid} value={product?.uid}>{product?.name}</option>
+                                        ))}
+                                    </Select>
                                 </div>
-                                <Select id="product" {...register("product_uid")} required>
-                                    {categories.map((product) => (
-                                        <option key={product.uid} value={product.uid}>{product.name}</option>
-                                    ))}
-                                </Select>
-                                {errors?.product_uid?.message && (
-                                    <p className="text-red-500 dark:text-red-600">{`${errors?.product_uid?.message}`}</p>
-                                )}
-                            </div>
+                            )}
+                            {errors?.product_uid?.message && (
+                                <p className="text-red-500 dark:text-red-600">{`${errors?.product_uid?.message}`}</p>
+                            )}
                             <div>
                                 <Label htmlFor="price">Precio</Label>
                                 <div className="mt-1">

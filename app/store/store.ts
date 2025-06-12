@@ -8,6 +8,7 @@ export interface IStore {
     discount: number;
     createdBy: ICreatedBy;
     product: IProduct;
+    is_deleted?: boolean;
   }
 
 export interface ICompanyStore{

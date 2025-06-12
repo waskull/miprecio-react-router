@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import type { ICompany } from "./company";
 import { useNavigate } from "react-router";
+import EditCompanyModal from "./editCompanyModal";
 
 export default function CategoryList({ data }: { data: ICompany[] }): JSX.Element {
     const navigate = useNavigate();
@@ -37,6 +38,9 @@ export default function CategoryList({ data }: { data: ICompany[] }): JSX.Elemen
                                     <div className="text-base truncate font-semibold text-gray-900 dark:text-white">
                                         {u.name}
                                     </div>
+                                    <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                        {u.description}
+                                    </div>
                                 </div>
                             </th>
                             <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
@@ -47,6 +51,7 @@ export default function CategoryList({ data }: { data: ICompany[] }): JSX.Elemen
                             </td>
                             <td className="whitespace-nowrap p-4 text-sm font-medium text-gray-900 dark:text-white">
                                 <div className="flex justify-end gap-x-2">
+                                    <EditCompanyModal uid={u.uid} />
                                     <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => {
                                         console.log("Borrando compañia: " + u.uid);
                                         await fetch(`companies/delete/${u.uid}`, { method: "POST" });

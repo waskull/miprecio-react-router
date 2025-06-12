@@ -29,7 +29,6 @@ export default function AddProductModal() {
         const data = await fetch("http://localhost:8000/api/v1/category/");
         const json = await data.json();
         setCategories(json);
-        console.table(json);
     }
     useEffect(() => {
         loadData();

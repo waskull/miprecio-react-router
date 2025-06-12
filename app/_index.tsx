@@ -1,6 +1,8 @@
 import { MegaMenu, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
-import { useState,type JSX} from "react";
+import { useEffect, useState, type JSX } from "react";
 import { Link, type MetaFunction } from "react-router";
+import type { IUser } from "./interfaces/user";
+import { set } from "zod/v4";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,9 +12,22 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  const getUserInfo = async () => {
+    try {
+      const data = await fetch("users/getuserinfo");
+      const json = await data.json();
+      setUserInfo(json?.email ? json as IUser | null : null);
+    } catch (e) {
+      return null;
+    }
+  }
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   return (
     <div id="home">
-      <Menu />
+      <Menu userInfo={userInfo} />
       <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
         <div className="flex flex-col items-center gap-16">
           <section className="">
@@ -20,17 +35,28 @@ export default function Index() {
               <div className="mr-auto place-self-center lg:col-span-7">
                 <header className="flex flex-col gap-9">
                   <h1 className="leading text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-                    Bienvenido a <span className=" text-blue-600">MiPrecio</span> <span className="text-pink-600">!</span>
+                    Bienvenido {userInfo?.fullname} a <span className=" text-blue-600">MiPrecio</span><span className="text-pink-600">!</span>
                   </h1>
                 </header>
                 <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
-                <Link to="/auth/signin" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100">
-                  Iniciar sesión
-                  <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                </Link>
-                <Link to="/auth/signup" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                  Crear cuenta
-                </Link>
+                {!userInfo ? (
+                  <div>
+                    <Link to="/auth/signin" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100">
+                      Iniciar sesión
+                      <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </Link>
+                    <Link to="/auth/signup" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                      Crear cuenta
+                    </Link>
+                  </div>
+                ) : (
+                  <div>
+                    <Link to="/home" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 dark:focus:ring-gray-500 dark:focus:bg-gray-100">
+                      Ir al Dashboard
+                      <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </Link>
+                  </div>
+                )}
               </div>
               <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
                 <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" />
@@ -51,7 +77,7 @@ export default function Index() {
   );
 }
 
-const Menu = (): JSX.Element => {
+const Menu = ({ userInfo }: { userInfo: IUser | null }): JSX.Element => {
   const [selectedSection, setSelectedSection] = useState<string | null>("home");
   return (
     <MegaMenu className="flex-no-wrap sticky top-0 z-10 w-full py-2 px-4 bg-white shadow shadow-black/8 dark:shadow-black/20 dark:bg-gray-700 backdrop-filter backdrop-blur-md bg-opacity-30 dark:bg-opacity-80">
@@ -60,14 +86,22 @@ const Menu = (): JSX.Element => {
         <span className="self-center whitespace-nowrap text-xl text-black font-semibold dark:text-white">MiPrecio</span>
       </NavbarBrand>
       <div className="order-2 hidden items-center md:flex">
-        <Link
-          to="/auth/signin"
-          className="mr-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-300 md:mr-2 md:px-5 md:py-2.5 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-        >
-          Iniciar sesión
-        </Link>
-        <Link className="mr-1 rounded-lg px-4 py-2 text-sm font-medium dark:text-zinc-900 bg-zinc-800 dark:bg-zinc-50 text-gray-200 focus:bg-zinc-900 hover:bg-zinc-700 focus:outline-none focus:ring-4 focus:ring-gray-300 md:mr-2 md:px-5 md:py-2.5 dark:hover:bg-zinc-200 dark:focus:bg-zinc-300 dark:focus:ring-zinc-700" to="/auth/signup">Crear cuenta</Link>
-        </div>
+        {!userInfo ? (
+          <div>
+            <Link
+              to="/auth/signin"
+              className="mr-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-300 md:mr-2 md:px-5 md:py-2.5 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+            >
+              Iniciar sesión
+            </Link>
+            <Link className="mr-1 rounded-lg px-4 py-2 text-sm font-medium dark:text-zinc-900 bg-zinc-800 dark:bg-zinc-50 text-gray-200 focus:bg-zinc-900 hover:bg-zinc-700 focus:outline-none focus:ring-4 focus:ring-gray-300 md:mr-2 md:px-5 md:py-2.5 dark:hover:bg-zinc-200 dark:focus:bg-zinc-300 dark:focus:ring-zinc-700" to="/auth/signup">Crear cuenta</Link>
+          </div>
+        ) : (
+          <div>
+            <Link className="mr-1 rounded-lg px-4 py-2 text-sm font-medium dark:text-zinc-900 bg-zinc-800 dark:bg-zinc-50 text-gray-200 focus:bg-zinc-900 hover:bg-zinc-700 focus:outline-none focus:ring-4 focus:ring-gray-300 md:mr-2 md:px-5 md:py-2.5 dark:hover:bg-zinc-200 dark:focus:bg-zinc-300 dark:focus:ring-zinc-700" to="/home">Panel Principal</Link>
+          </div>
+        )}
+      </div>
       <NavbarToggle />
       <NavbarCollapse>
         <NavbarLink className={selectedSection === "home" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer"} onClick={() => {
@@ -75,42 +109,42 @@ const Menu = (): JSX.Element => {
           const element = document.getElementById('home');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Inicio</NavbarLink>
         <NavbarLink className={selectedSection === "testimonials" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer hover:text-gray-900"} onClick={() => {
           setSelectedSection("testimonials");
           const element = document.getElementById('testimonials');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Clientes</NavbarLink>
         <NavbarLink className={selectedSection === "company" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer"} onClick={() => {
           setSelectedSection("company");
           const element = document.getElementById('company');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Compañia</NavbarLink>
         <NavbarLink className={selectedSection === "FAQ" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer"} onClick={() => {
           setSelectedSection("FAQ");
           const element = document.getElementById('FAQ');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Preguntas frecuentes</NavbarLink>
         <NavbarLink className={selectedSection === "team" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer"} onClick={() => {
           setSelectedSection("team");
           const element = document.getElementById('team');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Equipo</NavbarLink>
         <NavbarLink className={selectedSection === "contact" ? "dark:text-gray-300 font-semibold cursor-pointer" : "text-gray-500 cursor-pointer"} onClick={() => {
           setSelectedSection("contact");
           const element = document.getElementById('contact');
           element?.scrollIntoView({
             behavior: 'smooth'
-          }); 
+          });
         }}>Contacto</NavbarLink>
       </NavbarCollapse>
     </MegaMenu>
@@ -573,7 +607,7 @@ const Footer = () => {
               const element = document.getElementById('home');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">Inicio</a>
           </li>
           <li>
@@ -581,7 +615,7 @@ const Footer = () => {
               const element = document.getElementById('testimonials');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">Nuestros clientes</a>
           </li>
           <li>
@@ -589,7 +623,7 @@ const Footer = () => {
               const element = document.getElementById('company');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">Compañia</a>
           </li>
 
@@ -598,7 +632,7 @@ const Footer = () => {
               const element = document.getElementById('FAQ');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">FAQs</a>
           </li>
           <li>
@@ -606,7 +640,7 @@ const Footer = () => {
               const element = document.getElementById('team');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">Equipo</a>
           </li>
           <li>
@@ -614,16 +648,16 @@ const Footer = () => {
               const element = document.getElementById('contact');
               element?.scrollIntoView({
                 behavior: 'smooth'
-              }); 
+              });
             }} className="mr-4 hover:underline md:mr-6 cursor-pointer">Contacto</a>
           </li>
         </ul>
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025-2025 <a onClick={() => {
-              const element = document.getElementById('home');
-              element?.scrollIntoView({
-                behavior: 'smooth'
-              }); 
-            }} className="hover:cursor-pointer">MiPrecio™</a>. Todos los derechos reservados.</span>
+          const element = document.getElementById('home');
+          element?.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }} className="hover:cursor-pointer">MiPrecio™</a>. Todos los derechos reservados.</span>
       </div>
     </footer>
   );

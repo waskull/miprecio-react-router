@@ -6,6 +6,9 @@ import AddStoreProductModal from "./addStoreProductModal";
 import { useNavigate } from "react-router";
 
 import { lazy, Suspense, useState } from "react";
+import QrCodeModal from "./qrModal";
+import { Popover } from "flowbite-react";
+import QRCode from "react-qr-code";
 const EditStoreProductModal = lazy(() => import("./editStoreProductModal"));
 export default function StoreDetail({ data }: { data: ICompanyStore }) {
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -16,7 +19,7 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                 <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
                     <h2 className="mt-3 text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Productos</h2>
                     {/* aca irian los botones de filtrado  */}
-                    <AddStoreProductModal />
+                    <AddStoreProductModal ids={data.store.map((s: IStore) => { return s.product.uid })} />
                 </div>
                 <div className="relative mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4 ">
                     {data.store.map((s: IStore) => (
@@ -32,15 +35,23 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                                     <span className="me-2 rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300"> {s.discount}% de descuento </span>
 
                                     <div className="flex items-center justify-end gap-1">
-                                        <button onClick={() => {
-                                            console.log(s.product.uid);
-                                        }} type="button" className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                            <span className="sr-only"> Ver </span>
-                                            <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" strokeWidth="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                                <path stroke="currentColor" strokeWidth="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                            </svg>
-                                        </button>
+                                        <QrCodeModal product={s.product} price={s.price} wholesale_price={s.wholesale_price} discount={s.discount} />
+                                        {/* <Popover content={<div>
+                                            <QRCode
+                                                size={256}
+                                                style={{ height: "100%", maxWidth: "100%", width: "100%" }}
+                                                value={JSON.stringify({ product: s.product, price: s.price, discount: s.discount, wholesale_price: s.wholesale_price })}
+                                                viewBox={`0 0 256 256`}
+                                            />
+                                        </div>} trigger="hover">
+                                            <button type="button" id="btn" name="btn" className=" rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                <span className="sr-only"> Ver </span>
+                                                <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" strokeWidth="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                    <path stroke="currentColor" strokeWidth="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+                                            </button>
+                                        </Popover> */}
 
                                         <button type="button" className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                             <span className="sr-only"> Agregar a favoritos </span>

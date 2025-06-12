@@ -18,3 +18,17 @@ export const addCompanySchema = z
     });
 
 export type TaddCompanySchema = z.infer<typeof addCompanySchema>;
+
+export const editCompanySchema = z
+    .object({
+        name: z
+            .string({ message: "El nombre debe de ser una cadena de caracteres" })
+            .min(3, "El nombre debe de tener minimo 3 caracteres")
+            .max(50, "El nombre debe de tener maximo 50 caracteres"),
+        description: z
+            .string({ message: "La descripción debe de ser una cadena de caracteres" })
+            .min(5, "La descripción debe de tener minimo 5 caracteres")
+            .max(50, "La descripción de tener maximo 100 caracteres"),
+    });
+
+export type TeditCompanySchema = z.infer<typeof editCompanySchema>;
