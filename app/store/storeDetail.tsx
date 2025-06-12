@@ -1,10 +1,10 @@
+import { BsQrCodeScan } from "react-icons/bs";
 import { EditButton } from "~/components/primaryButton";
 import type { ICompanyStore, IStore } from "./store";
 import DeleteModal from "~/components/DeleteModal";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import AddStoreProductModal from "./addStoreProductModal";
 import { useNavigate } from "react-router";
-
 import { lazy, Suspense, useState } from "react";
 import QrCodeModal from "./qrModal";
 import { Popover } from "flowbite-react";
@@ -36,7 +36,7 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
 
                                     <div className="flex items-center justify-end gap-1">
                                         <QrCodeModal product={s.product} price={s.price} wholesale_price={s.wholesale_price} discount={s.discount} />
-                                         <Popover content={<div>
+                                        <Popover content={<div>
                                             <QRCode
                                                 size={256}
                                                 style={{ height: "100%", maxWidth: "100%", width: "100%" }}
@@ -46,10 +46,7 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                                         </div>} trigger="hover">
                                             <button type="button" id="btn" name="btn" className="hidden sm:block rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                                 <span className="sr-only"> Ver </span>
-                                                <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" strokeWidth="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                                    <path stroke="currentColor" strokeWidth="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                </svg>
+                                                <BsQrCodeScan className="h-5 w-5" aria-hidden="true" />
                                             </button>
                                         </Popover>
 

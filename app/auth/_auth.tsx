@@ -62,6 +62,7 @@ export default function AuthLayout({
     loaderData,
 }: Route.ComponentProps) {
     const navigate = useNavigate();
+    const pathname = useLocation().pathname;
     //const [data, setData] = useState(loaderData);
     const { toggleMode, computedMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
@@ -82,7 +83,7 @@ export default function AuthLayout({
             </div>
             <Card
                 horizontal
-                imgSrc={"/login.jpg"}
+                imgSrc={pathname === "/auth/signup" ? "/signup.jpg" : "/signin.jpg"}
                 imgAlt=""
                 className="w-full md:max-w-screen-md md:[&>*]:w-full md:[&>*]:p-16 [&>img]:hidden md:[&>img]:w-96 md:[&>img]:p-0 lg:[&>img]:block"
             >

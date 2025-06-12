@@ -1,11 +1,8 @@
 import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { HiPlus } from "react-icons/hi";
+import { BsQrCodeScan } from "react-icons/bs";
 import QRCode from "react-qr-code";
-import { useFetcher } from "react-router";
 import type { ICategory } from "~/category/category";
-import PrimaryButton, { ModalButton } from "~/components/primaryButton";
-import type { GenericError } from "~/interfaces/error";
 import type { IProduct } from "~/product/product";
 export default function QrCodeModal({ product, price, discount, wholesale_price }: { product: IProduct, price: number, discount: number, wholesale_price: number }) {
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -25,10 +22,7 @@ export default function QrCodeModal({ product, price, discount, wholesale_price 
                 setOpen(true);
             }} type="button" className="show sm:hidden rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                 <span className="sr-only"> Ver </span>
-                <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" strokeWidth="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                    <path stroke="currentColor" strokeWidth="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                </svg>
+                <BsQrCodeScan className="h-5 w-5" aria-hidden="true" />
             </button>
             <Modal size="lg" className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                  <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
