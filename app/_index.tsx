@@ -2,7 +2,6 @@ import { MegaMenu, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from 
 import { useEffect, useState, type JSX } from "react";
 import { Link, type MetaFunction } from "react-router";
 import type { IUser } from "./interfaces/user";
-import { set } from "zod/v4";
 
 export const meta: MetaFunction = () => {
   return [

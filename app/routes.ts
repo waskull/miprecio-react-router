@@ -26,6 +26,7 @@ export default [
     route("users/:id", "./user/editUserAction.tsx"),
     route("users/delete/:id", "./user/deleteUserAction.tsx"),
     route("users/getuserinfo", "./user/getUserInfo.tsx"),
+    route("users/all", "./user/getAllUsers.tsx"),
   ]),
   route("*", "./404.tsx"),
 ] satisfies RouteConfig;

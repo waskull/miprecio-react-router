@@ -43,12 +43,14 @@ export default function AddStoreProductModal({ ids }: { ids: string[] }) {
     }, []);
     return (
         <div>
-            <PrimaryButton onClick={() => setOpen(true)}>
-                <div className="flex items-center gap-x-3">
-                    <HiPlus className="text-xl" />
-                    Agregar producto
-                </div>
-            </PrimaryButton>
+            {products.length > 0 && (
+                <PrimaryButton onClick={() => setOpen(true)}>
+                    <div className="flex items-center gap-x-3">
+                        <HiPlus className="text-xl" />
+                        Agregar producto
+                    </div>
+                </PrimaryButton>
+            )}
             <Modal className="backdrop-blur-xs" onClose={() => setOpen(false)} show={isOpen}>
                 <ModalHeader className="border-b border-gray-200 !p-6 dark:border-gray-700">
                     <strong>Agregar nuevo producto a la tienda</strong>

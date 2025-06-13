@@ -12,7 +12,7 @@ import { addCompanySchema, type TaddCompanySchema } from "./companySchema";
 export default function AddCompanyModal({ isAdmin }: { isAdmin: boolean }) {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [users, setUsers] = useState<IUser[]>([]);
+    const [users, setUsers] = useState<{ users: IUser[], total: number }>({ users: [], total: 1 });
     let fetcher = useFetcher();
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {
@@ -27,8 +27,8 @@ export default function AddCompanyModal({ isAdmin }: { isAdmin: boolean }) {
         mode: "all",
     });
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/user/");
-        const json = await data.json();
+        const data = await fetch(`http://localhost:8000/api/v1/user/?limit=${100}&offset=${0}`);
+        const json = await data.json() as { users: IUser[], total: number };
         setUsers(json);
     }
     useEffect(() => {
@@ -84,7 +84,7 @@ export default function AddCompanyModal({ isAdmin }: { isAdmin: boolean }) {
                                     <Label htmlFor="partner_uid">Selecciona un usuario</Label>
                                 </div>
                                 <Select {...register("partner_uid")} name="partner_uid" id="partner_uid">
-                                    {users.map((user: IUser) => (
+                                    {users?.users?.map((user: IUser) => (
                                         <option key={user.uid} value={user.uid}>{user.fullname}</option>
                                     ))}
                                 </Select>

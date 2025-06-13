@@ -240,7 +240,7 @@ export function SalesChart({ store }: { store: ICompanyStore[] }) {
       },
     },
     xaxis: {
-      categories: store.map((st) => st.name),
+      categories: store.map((st) => st?.name),
       labels: {
         style: {
           colors: [labelColor],
@@ -307,7 +307,7 @@ export function SalesChart({ store }: { store: ICompanyStore[] }) {
   const series = [
     {
       name: "Cantidad:",
-      data: store.map((st, index) => st.store.filter((product: IStore) => !product.is_deleted).length),
+      data: store.map((st, index) => st.store.filter((product: IStore) => !product?.is_deleted).length),
       color: isDarkTheme ? "#31C48D" : "#057A55",
     },
   ];
