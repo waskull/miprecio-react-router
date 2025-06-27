@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import LoadingButton from "~/components/loadingButton";
 import type { IStore } from "./store";
+import apiURL from "~/apiURL";
 export default function EditStoreProductModal({ uid, companyId, isOpen, setOpen }: { uid: string, companyId: string, isOpen: boolean, setOpen: (isOpen: boolean) => void }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<IProduct[]>([]);
@@ -37,10 +38,10 @@ export default function EditStoreProductModal({ uid, companyId, isOpen, setOpen 
         }
     }, [fetcher]);
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/product/");
+        const data = await fetch(`${apiURL}/product/`);
         const json = await data.json();
         setCategories(json);
-        const response = await fetch(`http://localhost:8000/api/v1/store/company/${companyId}/product/${uid}`);
+        const response = await fetch(`${apiURL}/store/company/${companyId}/product/${uid}`);
         const res = await response.json() as IStore | null;        
         setValue("product_uid", res?.product.uid || "");
         setProduct(res);

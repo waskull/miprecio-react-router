@@ -3,10 +3,19 @@ import type { Route } from "../store/+types/_dashboard.store";
 import { useEffect, useState } from "react";
 import StoreList from "./StoreList";
 import { HiHome } from "react-icons/hi";
+import type { MetaFunction } from "react-router";
+import apiURL from "~/apiURL";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Tiendas" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/store/");
+        const data = await fetch(`${apiURL}/store/`);
         const json = await data.json();
         return json;
     } catch (e) {

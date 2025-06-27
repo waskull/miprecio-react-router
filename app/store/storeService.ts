@@ -1,8 +1,9 @@
+import apiURL from "~/apiURL";
 import type { TaddProductStoreSchema } from "./storeSchema";
 
 export async function addStoreProduct(formData: TaddProductStoreSchema, token: string) {
     try {
-        const result = await fetch("http://localhost:8000/api/v1/store/", {
+        const result = await fetch(`${apiURL}/store/`, {
             method: "POST",
             body: JSON.stringify(formData),
             headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` }
@@ -18,7 +19,7 @@ export async function addStoreProduct(formData: TaddProductStoreSchema, token: s
 
 export async function editProduct(formData: TaddProductStoreSchema, uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/store/${uid}`, {
+        const result = await fetch(`${apiURL}/store/${uid}`, {
             method: "PATCH",
             body: JSON.stringify(formData),
             headers: {
@@ -37,7 +38,7 @@ export async function editProduct(formData: TaddProductStoreSchema, uid: string,
 
 export async function deleteProduct(uid: string, product_uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/store/${uid}`, {
+        const result = await fetch(`${apiURL}store/${uid}`, {
             method: "DELETE",
             body: JSON.stringify({ product_uid }),
             headers: {

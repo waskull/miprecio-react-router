@@ -1,6 +1,5 @@
 import { Outlet, redirect, useLocation, useNavigate } from "react-router";
-import { Button, Card, DarkThemeToggle, useThemeMode } from "flowbite-react";
-import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { Card, DarkThemeToggle, useThemeMode } from "flowbite-react";
 import { commitSession, destroySession, getSession } from "~/sessions.server";
 import type { IUserSession } from "~/interfaces/user";
 import { getLoggedUserInfo } from "./authService";

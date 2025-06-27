@@ -1,17 +1,25 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Dropdown, DropdownItem, DropdownDivider, useThemeMode, Button, DropdownHeader, ToggleSwitch, type ThemeMode } from "flowbite-react";
 import type { Route } from "../dashboard/+types/_dashboard.dashboard";
-import { useEffect, useState, lazy, Suspense, memo, type FC, type JSX } from "react";
+import { useEffect, useState, type FC, type JSX } from "react";
 import type { ICompanyStore, IStore } from "~/store/store";
-import { data, Link, useLoaderData } from "react-router";
+import { data, Link, useLoaderData, type MetaFunction } from "react-router";
 import type { IProduct } from "~/product/product";
 import type { IUser } from "~/user/user";
 import { RoleObject } from "~/util/role-enum";
+import apiURL from "~/apiURL";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Inicio" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ params }: Route.LoaderArgs) {
   try {
-    const store = await fetch("http://localhost:8000/api/v1/store/top");
-    const products = await fetch("http://localhost:8000/api/v1/product/top");
-    const users = await fetch("http://localhost:8000/api/v1/user/top");
+    const store = await fetch(`${apiURL}/store/top`);
+    const products = await fetch(`${apiURL}/product/top`);
+    const users = await fetch(`${apiURL}/user/top`);
     return { store: await store.json() || [], products: await products.json() || [], users: await users.json() || [] };
   } catch (e) {
     return [];

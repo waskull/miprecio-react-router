@@ -2,8 +2,15 @@ import LoginForm from "~/auth/loginForm";
 import type { Route } from "./+types/_auth.auth.login";
 import { signIn } from "./authService";
 import type { TsignInSchema } from "./authSchemas";
-import { redirect } from "react-router";
+import { redirect, type MetaFunction } from "react-router";
 import { commitSession, getSession } from "~/sessions.server";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Iniciar sesión" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function action({
   request,

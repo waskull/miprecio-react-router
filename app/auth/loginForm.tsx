@@ -1,28 +1,15 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Form, useFetcher, useNavigate } from "react-router";
+import { Link, useFetcher, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import LoadingButton from "../components/loadingButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInSchema, type TsignInSchema } from "./authSchemas";
 import { useForm } from "react-hook-form";
-import { signIn } from "./authService";
-import type { GenericError, signInError } from "~/interfaces/error";
-async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/* export async function clientAction({
-  request,
-  serverAction,
-}: Route.ClientActionArgs) {
-  let formData = await request.formData();
-  return formData;
-} */
+import type { GenericError } from "~/interfaces/error";
 
 export default function LoginForm({ actionData }: any) {
   const [loading, setLoading] = useState(false);
   const fetcher = useFetcher();
-  const [errs, setErrs] = useState<signInError | string[] | null>(null);
   const navigate = useNavigate();
   /* const onSubmit = async (data: TsignInSchema) => {
     const valid = await trigger();
@@ -88,12 +75,12 @@ export default function LoginForm({ actionData }: any) {
             <Checkbox id="rememberMe" name="rememberMe" />
             <Label htmlFor="rememberMe">Recordarme</Label>
           </div>
-          <a
-            href="#"
+          <Link
+            to="/auth/password"
             className="w-1/2 text-right text-sm text-gray-900 font-bold dark:text-zinc-400 hover:underline"
           >
             Olvidaste tu contraseña?
-          </a>
+          </Link>
         </div>
         <div className="mb-6">
           {Array.isArray(actionData) ? (
@@ -126,16 +113,12 @@ export default function LoginForm({ actionData }: any) {
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-300">
           No tienes una cuenta?&nbsp;
-          <a
-            onClick={() => {
-              if (!loading) {
-                navigate("/auth/signup");
-              }
-            }}
+          <Link
+            to={"/auth/signup"}
             className="cursor-pointer hover:underline text-gray-900 font-bold dark:text-zinc-400"
           >
             Crear cuenta
-          </a>
+          </Link>
         </p>
       </fetcher.Form>
     </div>

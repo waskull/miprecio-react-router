@@ -6,7 +6,15 @@ import UserList from "./userList";
 import { getSession } from "~/sessions.server";
 import type { TaddUserSchema } from "./userSchema";
 import { addUser } from "./userService";
-import { data } from "react-router";
+import { data, type MetaFunction } from "react-router";
+import apiURL from "~/apiURL";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Usuarios" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function action({ request }: Route.ActionArgs) {
     const session = await getSession(request.headers.get("Cookie"));
@@ -33,7 +41,7 @@ export async function loader({ request }: Route.LoaderArgs) {
         limit = searchParams.get("limit") || "100";
         offset = searchParams.get("offset") || "0";
     }
-    const res = await fetch(`http://localhost:8000/api/v1/user/?limit=${limit}&offset=${offset}`, {
+    const res = await fetch(`${apiURL}/user/?limit=${limit}&offset=${offset}`, {
         headers: { "Content-Type": "application/json" }
     });
     const json = await res.json();

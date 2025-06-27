@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import LoadingButton from "~/components/loadingButton";
 import { RoleObject } from "~/util/role-enum";
 import type { IUser } from "./user";
+import apiURL from "~/apiURL";
 
 export default function EditUserModal({ uid }: { uid: string }) {
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -20,7 +21,7 @@ export default function EditUserModal({ uid }: { uid: string }) {
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {
         const getUser = async () => {
-            const response = await fetch("http://localhost:8000/api/v1/user/" + uid);
+            const response = await fetch(`${apiURL}/user/${uid}`);
             const user = await response.json() as IUser | null;
             setUser(user);
         }

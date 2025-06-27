@@ -2,11 +2,18 @@ import { Pagination } from "flowbite-react";
 import type { Route } from "../company/+types/_dashboard.company";
 import { useEffect, useState } from "react";
 import CompanyList from "./companyList";
-import { useLoaderData } from "react-router";
+import { useLoaderData, type MetaFunction } from "react-router";
 import type { ICompany } from "./company";
 import { getSession } from "~/sessions.server";
 import type { TaddCompanySchema } from "./companySchema";
 import { addCompany } from "./companyService";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Compañias" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {

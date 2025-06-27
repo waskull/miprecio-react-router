@@ -3,10 +3,17 @@ import type { Route } from "../product/+types/_dashboard.product";
 import { useEffect, useState, type JSX } from "react";
 import ProductList from "./productList";
 import type { IProduct } from "./product";
-import { useLoaderData } from "react-router";
+import { useLoaderData, type MetaFunction } from "react-router";
 import { getSession } from "~/sessions.server";
 import type { TaddProductSchema } from "./productSchema";
 import { addProduct } from "./productService";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Productos" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {

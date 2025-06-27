@@ -2,6 +2,7 @@ import { Modal, ModalHeader, ModalBody, Label, TextInput, ModalFooter, Select } 
 import { useEffect, useState } from "react";
 import { BsQrCodeScan } from "react-icons/bs";
 import QRCode from "react-qr-code";
+import apiURL from "~/apiURL";
 import type { ICategory } from "~/category/category";
 import type { IProduct } from "~/product/product";
 export default function QrCodeModal({ product, price, discount, wholesale_price }: { product: IProduct, price: number, discount: number, wholesale_price: number }) {
@@ -9,7 +10,7 @@ export default function QrCodeModal({ product, price, discount, wholesale_price 
     const [store, setStore] = useState<ICategory[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/store/");
+        const data = await fetch(`${apiURL}/store/`);
         const json = await data.json();
         setStore(json);
     }

@@ -3,13 +3,21 @@ import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import StoreDetail from "./storeDetail";
 import { addStoreProduct } from "./storeService";
-import type { TaddProductStoreSchema } from "./storeSchema";
 import { getSession } from "~/sessions.server";
 import type { Route } from "./+types/_dashboard.store.$id";
+import type { MetaFunction } from "react-router";
+import apiURL from "~/apiURL";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Tienda" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/store/company/" + params.id + "/");
+        const data = await fetch(`${apiURL}/store/company/${params.id}/`);
         const json = await data.json();
         return json;
     } catch (e) {

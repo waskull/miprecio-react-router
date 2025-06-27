@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import LoadingButton from "~/components/loadingButton";
+import apiURL from "~/apiURL";
 
 export default function AddStoreProductModal({ ids }: { ids: string[] }) {
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -34,7 +35,7 @@ export default function AddStoreProductModal({ ids }: { ids: string[] }) {
         }
     }, [fetcher]);
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/product/all/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ uids: ids }) });
+        const data = await fetch(`${apiURL}/product/all/`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ uids: ids }) });
         const json = await data.json();
         setProducts(json);
     }

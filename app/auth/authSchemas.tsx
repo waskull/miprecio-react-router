@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { RoleObject } from '~/util/role-enum';
 
 export const SignInSchema = z.object({
     email: z.string({ message: "El correo debe de ser una cadena de caracteres" }).trim().email("Debes proveer un correo valido"),
@@ -46,3 +45,18 @@ export const signUpSchema = z.object({
 });
 
 export type TsignUpSchema = z.infer<typeof signUpSchema>;
+
+export const PasswordRecoverSchema = z.object({
+    email: z.string({ message: "El correo debe de ser una cadena de caracteres" }).trim().email("Debes proveer un correo valido"),
+});
+
+export type TpasswordRecoverSchema = z.infer<typeof PasswordRecoverSchema>;
+
+export const TokenSchema = z.object({
+    token: z
+        .string({ message: "El codigo debe de ser una cadena de caracteres" })
+        .min(3, "El codigo debe de tener minimo 3 caracteres")
+        .max(50, "El codigo debe de tener maximo 50 caracteres"),
+});
+
+export type TtokenSchema = z.infer<typeof TokenSchema>;

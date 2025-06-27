@@ -44,7 +44,6 @@ export default function CategoryList({ data }: { data: ICategory[] }): JSX.Eleme
                                 <div className="flex justify-end gap-x-2">
                                     <EditCategoryModel uid={u.uid} />
                                     <DeleteModal title="Eliminar categoria" desc="¿Estas seguro de que desas borrar esta categoria?" deleteFunc={async () => {
-                                        console.log("Borrando categoria: " + u.uid);
                                         await fetch(`categories/delete/${u.uid}`, { method: "POST" });
                                         navigate('.', { replace: true });
                                     }} />

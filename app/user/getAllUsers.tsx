@@ -1,5 +1,6 @@
 import { data } from "react-router";
 import type { Route } from "./+types/getAllUsers";
+import apiURL from "~/apiURL";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const url = new URL(request.url);
@@ -10,7 +11,7 @@ export async function loader({ request }: Route.LoaderArgs) {
         limit = searchParams.get("limit") || "10";
         offset = searchParams.get("offset") || "0";
     }
-    const res = await fetch(`http://localhost:8000/api/v1/user/?limit=${limit}&offset=${offset}`, {
+    const res = await fetch(`${apiURL}/user/?limit=${limit}&offset=${offset}`, {
         headers: { "Content-Type": "application/json" }
     });
     const json = await res.json();

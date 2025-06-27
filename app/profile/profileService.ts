@@ -1,25 +1,9 @@
 import apiURL from "~/apiURL";
-import type { TaddUserSchema, TeditUserSchema } from "./userSchema";
+import type { TeditUserPasswordSchema, TprofileSchema } from "./profileSchema";
 
-export async function addUser(formData: TaddUserSchema, token: string) {
+export async function editProfile(formData: TprofileSchema, token: string) {
     try {
-        const result = await fetch(`${apiURL}/user/`, {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` }
-        });
-        const data = await result.json();
-        if (data?.error_code) return { error: true, message: data.message, error_code: data.error_code };
-        else if (Array.isArray(data?.detail)) { return data?.detail.map((item: any) => item.msg) }
-        else return data;
-    } catch (e) {
-        return e;
-    };
-}
-
-export async function editUser(formData: TeditUserSchema, uid: string, token: string) {
-    try {
-        const result = await fetch(`${apiURL}/user/${uid}`, {
+        const result = await fetch(`${apiURL}/profile`, {
             method: "PATCH",
             body: JSON.stringify(formData),
             headers: {
@@ -36,17 +20,17 @@ export async function editUser(formData: TeditUserSchema, uid: string, token: st
     };
 }
 
-export async function deleteUser(uid: string, token: string) {
+export async function editPassword(formData: TeditUserPasswordSchema, token: string) {
     try {
-        const result = await fetch(`${apiURL}/user/${uid}`, {
-            method: "DELETE",
+        const result = await fetch(`${apiURL}/user/password/`, {
+            method: "PATCH",
+            body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${token}`
             }
         });
         const data = await result.json();
-        console.log("DELETE: ", data);
         if (data?.error_code) return { error: true, message: data.message, error_code: data.error_code };
         else if (Array.isArray(data?.detail)) { return data?.detail.map((item: any) => item.msg) }
         else return data;

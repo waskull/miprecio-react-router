@@ -5,6 +5,7 @@ export default [
   layout("./auth/_auth.tsx", [
     route("auth/signin", "./auth/_auth.auth.login.tsx"),
     route("auth/signup", "./auth/_auth.auth.signup.tsx"),
+    route("auth/password", "./auth/_auth.auth.password.tsx"),
     route("auth/logout", "./auth/authLogoutAction.tsx"),
   ]),
   layout("./dashboard/_dashboard.tsx", [
@@ -22,6 +23,7 @@ export default [
     route("store/:id", "./store/_dashboard.store.$id.tsx"),
     route("store/edit/:id", "./store/editStoreAction.tsx"),
     route("store/delete/:id/product/:product_uid", "./store/deleteStoreAction.tsx"),
+    route("profile", "./profile/_dashboard.profile.tsx"),
     route("users", "./user/_dashboard.user.tsx"),
     route("users/:id", "./user/editUserAction.tsx"),
     route("users/delete/:id", "./user/deleteUserAction.tsx"),

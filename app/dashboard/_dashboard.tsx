@@ -9,6 +9,7 @@ import { commitSession, getSession } from "~/sessions.server";
 import type { Route } from "./+types/_dashboard";
 import NavBar from "../components/navbar";
 import type { IUserSession } from "~/interfaces/user";
+import apiURL from "~/apiURL";
 
 interface NavbarSidebarLayoutProps {
     isFooter?: boolean;
@@ -20,7 +21,7 @@ export async function loader({ request }: Route.LoaderArgs) {
         return redirect('/auth/signin')
     };
     try {
-        const res = await fetch("http://localhost:8000/api/v1/auth/refresh_token", { method: "GET", headers: { authorization: `Bearer ${session.get("refresh_token")}` } });
+        const res = await fetch(`${apiURL}/auth/refresh_token`, { method: "GET", headers: { authorization: `Bearer ${session.get("refresh_token")}` } });
         const result = await res.json();
         if (result?.error_code === "invalid_token") {
             console.log("token invalido")
@@ -30,7 +31,7 @@ export async function loader({ request }: Route.LoaderArgs) {
                 },
             });
         }
-        const data = await fetch("http://localhost:8000/api/v1/auth/me", { method: "GET", headers: { authorization: `Bearer ${session.get("access_token")}` } });
+        const data = await fetch(`${apiURL}/auth/me`, { method: "GET", headers: { authorization: `Bearer ${session.get("access_token")}` } });
         const response = await data.json();
         const user = {
             role: response?.role,

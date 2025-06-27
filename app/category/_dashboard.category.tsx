@@ -2,11 +2,18 @@ import { Pagination } from "flowbite-react";
 import { useEffect, useState } from "react";
 import CategoryList from "./CategoryList";
 import type { Route } from "./+types/_dashboard.category";
-import { useLoaderData } from "react-router";
+import { useLoaderData, type MetaFunction } from "react-router";
 import type { ICategory } from "./category";
 import { getSession } from "~/sessions.server";
 import type { TaddCategorySchema } from "./categorySchema";
 import { addCategory } from "./categoryService";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Categorias" },
+    { name: "description", content: "MiPrecio" },
+  ];
+};
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {

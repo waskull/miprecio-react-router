@@ -4,9 +4,9 @@ import AddUserModal from "../user/addUserModal";
 import AddCategoryModel from "~/category/addCategoryModel";
 import AddProductModal from "~/product/addProductModal";
 import AddCompanyModal from "~/company/addCompanyModal";
-import type { IUserSession } from "~/interfaces/user";
 import { RoleObject } from "~/util/role-enum";
 import { useState } from "react";
+import type { IUserSession } from "~/user/user";
 export default function NavBar({ userData = null }: { userData: IUserSession | null }) {
   /* const [userData, setUserData] = useState<IUserSession | null>(null);
   useEffect(() => {
@@ -40,6 +40,8 @@ export default function NavBar({ userData = null }: { userData: IUserSession | n
               {pathname.toUpperCase().replace("/", "") === "COMPANIES" && "Compañias"}
               {pathname.toUpperCase().replace("/", "") === "CATEGORIES" && "Categorias"}
               {pathname.toUpperCase().replace("/", "") === "PRODUCTS" && "Productos"}
+              {pathname.toUpperCase().replace("/", "") === "PROFILE" && "Perfil"}
+              {pathname.toUpperCase().replace("/", "") === "PASSWORD" && "Cambiar Contraseña"}
             </span>
           </div>
           <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
@@ -144,7 +146,7 @@ function UserDropdown({ userData }: { userData: IUserSession | null }) {
                 <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Perfil</Link>
               </li>
               <li>
-                <Link to="/changepassword" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</Link>
+                <a href="/profile?password=true" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</a>
               </li>
               {/* <div className="divide-y divide-gray-700 dark:divide-gray-200">
                 <Link to="/" onClick={
@@ -184,38 +186,7 @@ function UserDropdown({ userData }: { userData: IUserSession | null }) {
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
           </svg>
         </button>
-      </Popover>
-      {/* <button id="dropdownAvatarNameButton" data-dropdown-toggle="userDropdown" className="flex items-center text-sm pe-1 font-medium text-gray-900 rounded-full hover:text-gray-500 dark:hover:text-gray-400 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
-        <span className="sr-only">Abrir menu de usuario</span>
-        <img className="w-8 h-8 me-2 rounded-full" src="/favicon.ico" alt="user photo" />
-        {userData?.fullname ?? ""}
-        <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-        </svg>
-      </button>
-
-
-      <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
-        <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-          <div className="font-medium ">{RoleObject.admin === userData?.role ? "Administrador" : RoleObject.partner === userData?.role ? "Socio" : "Usuario"}</div>
-          <div className="truncate">{userData?.email || ""}</div>
-        </div>
-
-        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
-          <li>
-            <Link to="/home" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Inicio</Link>
-          </li>
-          <li>
-            <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Perfil</Link>
-          </li>
-          <li>
-            <Link to="/changepassword" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cambiar contraseña</Link>
-          </li>
-        </ul>
-        <div className="py-2">
-          <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:text-gray-200 dark:hover:text-gray-200 hover:bg-red-500 dark:hover:bg-red-500 dark:text-gray-200">Salir</Link>
-        </div>
-      </div> */}
+      </Popover>      
     </div>
   );
 }
