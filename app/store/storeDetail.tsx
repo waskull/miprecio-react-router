@@ -25,7 +25,7 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                     {data.store.map((s: IStore) => (
                         <div key={s.product.uid} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                             <div className="h-56 w-full">
-                                <a href="#">
+                                <a>
                                     <img className="mx-auto h-full dark:hidden" src="/favicon.ico" alt="" />
                                     <img className="mx-auto hidden h-full dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="" />
                                 </a>
@@ -35,12 +35,12 @@ export default function StoreDetail({ data }: { data: ICompanyStore }) {
                                     <span className="me-2 rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300"> {s.discount}% de descuento </span>
 
                                     <div className="flex items-center justify-end gap-1">
-                                        <QrCodeModal product={s.product} price={s.price} wholesale_price={s.wholesale_price} discount={s.discount} />
+                                        <QrCodeModal uid={data.uid} product={s.product}/>
                                         <Popover content={<div>
                                             <QRCode
                                                 size={256}
                                                 style={{ height: "100%", maxWidth: "100%", width: "100%" }}
-                                                value={JSON.stringify({ product: s.product, price: s.price, discount: s.discount, wholesale_price: s.wholesale_price })}
+                                                value={JSON.stringify({ uid: data.uid, product_uid: s.product.uid })}
                                                 viewBox={`0 0 256 256`}
                                             />
                                         </div>} trigger="hover">

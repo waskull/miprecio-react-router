@@ -3,16 +3,13 @@ import { useEffect, useState } from "react";
 import { BsQrCodeScan } from "react-icons/bs";
 import QRCode from "react-qr-code";
 import apiURL from "~/apiURL";
-import type { ICategory } from "~/category/category";
 import type { IProduct } from "~/product/product";
-export default function QrCodeModal({ product, price, discount, wholesale_price }: { product: IProduct, price: number, discount: number, wholesale_price: number }) {
+export default function QrCodeModal({ uid, product }: { uid: string, product: IProduct }) {
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [store, setStore] = useState<ICategory[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     async function loadData() {
         const data = await fetch(`${apiURL}/store/`);
         const json = await data.json();
-        setStore(json);
     }
     useEffect(() => {
         loadData();
@@ -35,7 +32,7 @@ export default function QrCodeModal({ product, price, discount, wholesale_price 
                             size={256}
                             className="mx-auto"
                             style={{ height: "90%", maxWidth: "90%", width: "90%" }}
-                            value={JSON.stringify({ product: product, price: price, discount: discount, wholesale_price: wholesale_price })}
+                            value={JSON.stringify({uid:uid, product_uid: product.uid})}
                             viewBox={`0 0 256 256`}
                         />
                    
