@@ -7,6 +7,7 @@ import type { ICompany } from "./company";
 import { getSession } from "~/sessions.server";
 import type { TaddCompanySchema } from "./companySchema";
 import { addCompany } from "./companyService";
+import apiURL from "~/apiURL";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +18,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ params }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/company/");
+        const data = await fetch(`${apiURL}/company/`);
         const json = await data.json() as ICompany[];
         return { data: json || [] };
     } catch (e) {

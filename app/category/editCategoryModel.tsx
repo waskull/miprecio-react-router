@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import { addCategorySchema, type TaddCategorySchema } from "./categorySchema";
 import type { ICategory } from "./category";
+import apiURL from "~/apiURL";
 
 const EditCategoryModel = function ({ uid }: { uid: string }) {
     const [isOpen, setOpen] = useState(false);
@@ -18,7 +19,7 @@ const EditCategoryModel = function ({ uid }: { uid: string }) {
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {
         const getCategory = async () => {
-            const response = await fetch("http://localhost:8000/api/v1/category/" + uid);
+            const response = await fetch(`${apiURL}/category/${uid}`);
             const category = await response.json() as ICategory | null;
             setCategory(category);
             setValue("name", category?.name || "");

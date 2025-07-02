@@ -1,7 +1,7 @@
 import { MegaMenu, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
 import { useEffect, useState, type JSX } from "react";
 import { Link, type MetaFunction } from "react-router";
-import type { IUser } from "./interfaces/user";
+import type { IUser } from "./user/user";
 
 export const meta: MetaFunction = () => {
   return [

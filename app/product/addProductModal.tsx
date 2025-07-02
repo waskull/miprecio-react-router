@@ -8,6 +8,7 @@ import type { GenericError } from "~/interfaces/error";
 import { addProductSchema, type TaddProductSchema } from "./productSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import apiURL from "~/apiURL";
 export default function AddProductModal() {
     const [isOpen, setOpen] = useState<boolean>(false);
     const [categories, setCategories] = useState<ICategory[]>([]);
@@ -26,7 +27,7 @@ export default function AddProductModal() {
         mode: "all",
     });
     async function loadData() {
-        const data = await fetch("http://localhost:8000/api/v1/category/");
+        const data = await fetch(`${apiURL}/category/`);
         const json = await data.json();
         setCategories(json);
     }

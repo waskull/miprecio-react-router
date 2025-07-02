@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import { addCompanySchema, type TaddCompanySchema } from "./companySchema";
+import apiURL from "~/apiURL";
 
 export default function AddCompanyModal({ isAdmin }: { isAdmin: boolean }) {
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -27,7 +28,7 @@ export default function AddCompanyModal({ isAdmin }: { isAdmin: boolean }) {
         mode: "all",
     });
     async function loadData() {
-        const data = await fetch(`http://localhost:8000/api/v1/user/?limit=${100}&offset=${0}`);
+        const data = await fetch(`${apiURL}/user/?limit=${100}&offset=${0}`);
         const json = await data.json() as { users: IUser[], total: number };
         setUsers(json);
     }

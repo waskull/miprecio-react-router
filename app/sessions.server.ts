@@ -1,5 +1,5 @@
 import { createCookieSessionStorage } from "react-router";
-import type { IUserSession } from "./interfaces/user";
+import type { IUserSession } from "./user/user";
 
 type SessionData = {
     user: IUserSession;

@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import type { GenericError } from "~/interfaces/error";
 import { editCompanySchema, type TeditCompanySchema } from "./companySchema";
 import type { ICompany } from "./company";
+import apiURL from "~/apiURL";
 
 const editCompanyModal = function ({ uid }: { uid: string }) {
     const [isOpen, setOpen] = useState(false);
@@ -18,7 +19,7 @@ const editCompanyModal = function ({ uid }: { uid: string }) {
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {
         const getCategory = async () => {
-            const response = await fetch("http://localhost:8000/api/v1/company/" + uid);
+            const response = await fetch(`${apiURL}/company/"${uid}`);
             const company = await response.json() as ICompany | null;
             setCompany(company);
             setValue("name", company?.name || "");

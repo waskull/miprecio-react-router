@@ -7,6 +7,7 @@ import type { ICategory } from "./category";
 import { getSession } from "~/sessions.server";
 import type { TaddCategorySchema } from "./categorySchema";
 import { addCategory } from "./categoryService";
+import apiURL from "~/apiURL";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +18,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/category/");
+        const data = await fetch(`${apiURL}/category/`);
         const json = await data.json();
         return { data: json || [] };
     }catch(e){

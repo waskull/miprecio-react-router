@@ -9,6 +9,7 @@ import type { GenericError } from "~/interfaces/error";
 import { addProductSchema, type TaddProductSchema } from "./productSchema";
 import type { IProduct } from "./product";
 import type { ICategory } from "~/category/category";
+import apiURL from "~/apiURL";
 
 const EditProductModal = function ({ uid }: { uid: string }) {
     const [isOpen, setOpen] = useState(false);
@@ -20,10 +21,10 @@ const EditProductModal = function ({ uid }: { uid: string }) {
     const [data, setData] = useState<GenericError | null>(null);
     useEffect(() => {
         const getCategory = async () => {
-            const data = await fetch("http://localhost:8000/api/v1/category/");
+            const data = await fetch(`${apiURL}/category/`);
             const json = await data.json();
             setCategories(json);
-            const response = await fetch("http://localhost:8000/api/v1/product/" + uid);
+            const response = await fetch(`${apiURL}/product/"${uid}`);
             const product = await response.json() as IProduct | null;
             setProduct(product);
             setValue("name", product?.name || "");

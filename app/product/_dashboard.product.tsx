@@ -7,6 +7,7 @@ import { useLoaderData, type MetaFunction } from "react-router";
 import { getSession } from "~/sessions.server";
 import type { TaddProductSchema } from "./productSchema";
 import { addProduct } from "./productService";
+import apiURL from "~/apiURL";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +18,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: Route.LoaderArgs) {
     try {
-        const data = await fetch("http://localhost:8000/api/v1/product/");
+        const data = await fetch(`${apiURL}/product/`);
         const json = await data.json();
 
         return { data: json || [] }

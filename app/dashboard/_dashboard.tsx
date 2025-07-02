@@ -8,8 +8,8 @@ import { Footer, FooterLink, FooterLinkGroup, useThemeMode, type ThemeMode } fro
 import { commitSession, getSession } from "~/sessions.server";
 import type { Route } from "./+types/_dashboard";
 import NavBar from "../components/navbar";
-import type { IUserSession } from "~/interfaces/user";
 import apiURL from "~/apiURL";
+import type { IUserSession } from "~/user/user";
 
 interface NavbarSidebarLayoutProps {
     isFooter?: boolean;

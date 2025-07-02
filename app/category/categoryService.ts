@@ -1,3 +1,4 @@
+import apiURL from "~/apiURL";
 import type { TaddCategorySchema } from "./categorySchema";
 
 export async function addCategory(formData: TaddCategorySchema, token: string) {
@@ -18,7 +19,7 @@ export async function addCategory(formData: TaddCategorySchema, token: string) {
 
 export async function editCategory(formData: TaddCategorySchema, uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/category/${uid}`, {
+        const result = await fetch(`${apiURL}/category/${uid}`, {
             method: "PATCH",
             body: JSON.stringify(formData),
             headers: {
@@ -37,7 +38,7 @@ export async function editCategory(formData: TaddCategorySchema, uid: string, to
 
 export async function deleteCategory(uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/category/${uid}`, {
+        const result = await fetch(`${apiURL}/category/${uid}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

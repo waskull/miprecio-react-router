@@ -1,8 +1,9 @@
+import apiURL from "~/apiURL";
 import type { TaddCompanySchema } from "./companySchema";
 
 export async function addCompany(formData: TaddCompanySchema, token: string) {
     try {
-        const result = await fetch("http://localhost:8000/api/v1/company/", {
+        const result = await fetch(`${apiURL}/company/`, {
             method: "POST",
             body: JSON.stringify(formData),
             headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` }
@@ -18,7 +19,7 @@ export async function addCompany(formData: TaddCompanySchema, token: string) {
 
 export async function editCompany(formData: TaddCompanySchema, uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/company/${uid}`, {
+        const result = await fetch(`${apiURL}/company/${uid}`, {
             method: "PATCH",
             body: JSON.stringify(formData),
             headers: {
@@ -37,7 +38,7 @@ export async function editCompany(formData: TaddCompanySchema, uid: string, toke
 
 export async function deleteCompany(uid: string, token: string) {
     try {
-        const result = await fetch(`http://localhost:8000/api/v1/company/${uid}`, {
+        const result = await fetch(`${apiURL}/company/${uid}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
